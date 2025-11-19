@@ -1,3 +1,11 @@
+/**
+ * Name:
+ * Author:
+ * Version:
+ * Purpose:
+ *
+ */
+
 // Bring in express
 const express = require('express');
 // Bring in the config file
@@ -10,11 +18,6 @@ const app = express();
 
 // Destructure our models from the database
 const { Product, User } = db.sequelize.models
-
-// Test that .env is working
-// require('dotenv').config();
-// See if our .env variables have been loaded
-// console.log(process.env);
 
 // Initialise middleware
 // This middleware allows the server to parse incomming requests with JSON data
@@ -38,30 +41,55 @@ app.get('/test', (req, res) => {
   res.status(200).send(' I am a server, and I am up!');
 });
 
-// Create routes for our flower shop - Products
-// getting all the products
+/*
+  GET ALL SERVICES
+  Path:
+  Request:
+  Type:
+  Description: Create routes for Bob's Garage - Services
+*/
 app.get('/api/products', (req, res) => {
   // log the path and request
   console.log('/api/products - GET');
   // Send response
   res.send('Get all Products, GET');
 });
-// Get a single flower
-// Note: :id is for dynamic routes
+
+/*
+  GET A SINGLE SERVICE
+  Path:
+  Request:
+  Type:
+  Description: :id is for dynamic routes
+*/
 app.get('/api/products/edit/:id', (req, res) => {
   // log the path and request
   console.log('/api/products/edit/:id - GET');
   // Send response
   res.send('Get a single Product by id, GET');
 });
-// updating a flower
+
+/*
+  UPDATING A SERVICE
+  Path:
+  Request:
+  Type:
+  Description:
+*/
 app.put('/api/products/edit/:id', (req, res) => {
   // log the path and request
   console.log('/api/products/edit/:id - PUT');
   // Send response
   res.send('Update a product by id, PUT');
 });
-// deleting a flower
+
+/*
+  DELETING A SERVICE
+  Path: /api/products/delete:id
+  Request: DELETE
+  Type: auth route
+  Description:
+*/
 app.delete('/api/products/delete/:id', (req, res) => {
   // log the path and request
   console.log('/api/products/delete/:id - DELETE');
@@ -69,19 +97,18 @@ app.delete('/api/products/delete/:id', (req, res) => {
   res.send('Delete a Product, DELETE');
 });
 
-// Adding a flower
-// path: /api/products/add
-// name: add new product
-// request: POST
-// type: auth route
-// Description: save a new product to the database using the Product model
+/*
+  ADDING A SERVICE
+  Path: /api/products/add
+  Request: POST
+  Type: auth route - Only admin can add new services
+  Description: save a new product to the database using the Product model
+*/
 app.post('/api/products/add', async (req, res) => {
   // log the path and request
   console.log('/api/products/add - POST');
   // Create a dummy product to add in
-  // To save we need to use the Model.create method
-  // This allows us to send the data to the database and save it in the products table
-  // What we send needs to match our model
+  // This allows us to send the data to the database and save it in the products table. What we send needs to match our model
   const product = await Product.create({
     name: 'New flower name',
     desc: 'A new flower added to the database',
@@ -96,10 +123,12 @@ app.post('/api/products/add', async (req, res) => {
   res.send(product);
 });
 
-// Modify the Listen so we can sync with our database
-// use the sync() method
-// Purpose: will check if the tables exist - if they do not exist, then it will create them
-// Note: be careful using the sync() method - a wrong setup could delete everything in the the database
+/*
+  Modify the Listen so we can sync with our database
+  use the sync() method
+  Purpose: will check if the tables exist - if they do not exist, then it will create them
+  Note: be careful using the sync() method - a wrong setup could delete everything in the the database
+*/
 db.sequelize.sync().then(() => {
   // Listen to the port
   app.listen(config.port,
@@ -107,7 +136,9 @@ db.sequelize.sync().then(() => {
   )
 })
 
-// We actually need to run MySQL database before we start the server
-// Wamp / mamp / Xampp running with MySQL installed.
-// Make sure that your username and password match what you need for the database
-// Default:
+/*
+  We actually need to run MySQL database before we start the server
+  Wamp / mamp / Xampp running with MySQL installed.
+  Make sure that your username and password match what you need for the database
+  Default:
+*/

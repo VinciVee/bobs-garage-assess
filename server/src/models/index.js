@@ -32,9 +32,9 @@ const Product = sequelize.define('Product',
       autoIncrement: true,
       primaryKey: true
     },
-    name: { type: DataTypes.STRING},
-    desc: { type: DataTypes.TEXT('long')},
-    image: { type: DataTypes.STRING},
+    name: { type: DataTypes.STRING },
+    desc: { type: DataTypes.TEXT('long') },
+    image: { type: DataTypes.STRING },
     price: { type: DataTypes.REAL(3,2), allowNull: false }
   }
 )
@@ -50,14 +50,16 @@ const User = sequelize.define('User',
     lastName: { type: DataTypes.STRING },
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
     image: { type: DataTypes.STRING },
-    password: { type: DataTypes.STRING, allowNull: false},
+    password: { type: DataTypes.STRING, allowNull: false },
     isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false }
   }
 )
 
 // Set up our variables
-db.sequelize = sequelize // Give us access to our sequalize instance with the models
-db.Sequelize = Sequelize // Give us access to the Sequalize class and methods
+// Sequalize refers to library itself - gives access to class and methods
+// sequelize refers to an instance of Sequelize - represents connection to one database
+db.sequelize = sequelize
+db.Sequelize = Sequelize
 
 // export the variables
 module.exports = db
