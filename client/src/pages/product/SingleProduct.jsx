@@ -2,29 +2,32 @@
 import { Link } from 'react-router';
 import { FaTimes, FaPencilAlt } from 'react-icons/fa';
 import { IconContext } from 'react-icons/lib';
-// Import the useProductDelete hook from our context
-import { useProductDelete } from '../../context/DaisyContext';
+import * as styles from './SingleProduct.css'
+import { useDispatch } from 'react-redux'
+import { deleteProduct } from '../../slices/productSlice';
 
 const SingleProduct = ({flower}) => {
-  // use the useProductDelete hook
-  const deleteProduct = useProductDelete(); // give us access to the deleteProduct function in our contextComponent via the provider.
+  const dispatch = useDispatch()
+
   const onDelete = (id, e) => {
-    // test that the function is called
     console.log('onDelete called. SingleProducts.jsx');
-    // log out the id.
-    console.log(`Id clicked: ${id}`);
+    // console.log(`Id clicked: ${id}`);
     // log out our event paramenter
     console.log(e.type);
-    // Call the handle delete function
-    deleteProduct(id);
+    try {
+      // deleteProduct({id})
+      dispatch( deleteProduct(id) ).unwrap()
+    } catch (err) {
+      console.log('Failed to delete product', err)
+    }
   }
 
-  // We can destructure flower
-  const { id, name, desc, image, price } = flower;
+
+  const { prodId, name, desc, image, price } = flower;
   return (
     <div className="col-md-4">
-      <div className="card cardSize">
-          <img src={image} className="card-img-top card-img" alt={name} />
+      <div className={`card ${styles.cardSize}`}>
+          <img src={image} className={styles.cardImage} alt={name} />
             <div className="card-body">
               <h5 className="card-title">{name}</h5>
               <p className="card-text">{desc}</p>
@@ -33,12 +36,12 @@ const SingleProduct = ({flower}) => {
             </div>
             <div className="d-grid card-footer bg-secondary-subtle gap-3">
               <IconContext.Provider value={{ size: '2em'}}>
-                <Link to={`/edit/${id}`}>
+                <Link to={`/edit/${prodId}`}>
                   <button type='button' className='btn btn-warning p-3 text-primary fw-bold'>
                     <FaPencilAlt /> Edit
                   </button>
                 </Link>
-                <button type='button' className='btn btn-info text-danger p-3 fw-bold' onClick={e => onDelete(id, e) }>
+                <button type='button' className='btn btn-info text-danger p-3 fw-bold' onClick={e => onDelete(prodId, e) }>
                   <FaTimes /> Delete
                 </button>
               </IconContext.Provider>

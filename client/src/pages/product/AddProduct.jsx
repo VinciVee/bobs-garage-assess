@@ -1,19 +1,15 @@
-// Use rafce to create our boilerplate
-// import useState
+/**
+ * AddProduct.jsx
+ *
+ *
+ */
 import { useState } from "react";
-// import uuid. create random ids for our application.
-// Check https://www.npmjs.com/package/uuid
-import { v4 as uuidv4 } from 'uuid';
-// import useProductAdd from our context
-import { useProductAdd } from "../../context/DaisyContext"
-// import the validation functions.
+import { useDispatch } from "react-redux";
+import { addProduct } from "../../slices/productSlice";
 import { alpha, is_empty, isValidPrice} from "../../util/validation"
 
 const AddProduct = () => {
-  // console.log(props);
-  // Create the state to hold our form data and set the intial state
   const [formData, setFormData] = useState({
-    id: '',
     name: '',
     desc: '',
     image: '',
@@ -21,37 +17,26 @@ const AddProduct = () => {
     errors: {},
   });
 
-  const addProduct = useProductAdd()
+  const dispatch = useDispatch()
 
-  // We can destructure to pull the variables from the formData
-  const { name, desc, image, price, errors} = formData;
+  const { name, desc, image, price, errors} = formData
 
   const onChange = e => {
     // e.target.name - inputbox we are typing in.
     // e.target.value - the text we have typed in the inputbox.
-    // setFormData - this update the state
-    // Use the spread operator '...' to get the current state first.
     setFormData({
       ...formData, [e.target.name]: e.target.value
-    });
-  };
+    })
+  }
 
   const onSubmit = e => {
-    // By default a submit button will refreshes the page.
-    // To stop this behaviour we can use the follow function.
-    e.preventDefault();
-    // This is helpful for client-side validation
-    // Check to see that the function is called
+    // Prevent submit button default behavior - refreshes the page
+    e.preventDefault()
     console.log('onSubmit (AddProducts) running...');
 
-    // Check for errors
-    // Client-side validation
-    // Bootstrap has classes we can use for validation
+    // CLIENT-SIDE VALIDATION --------
     // https://getbootstrap.com/docs/5.3/forms/validation/
-
-    // We can create functions to re_use for validation.
-
-    // name errors
+    // NAME
     if (is_empty(name)){
       console.log('Name empty')
       setFormData({
@@ -77,8 +62,10 @@ const AddProduct = () => {
     }else {
       setFormData({...formData, errors: {name: ''}})
     }
-    // desc errors
-    // image errors
+
+    // DESCRIPTION
+
+    // IMAGE
     let defaultImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYoR2rpqdWmu6bsR0BZb6y2Lw2TaglVVB8TQ&s'
     if(is_empty(image)){
       console.log('Use default image')
@@ -87,9 +74,8 @@ const AddProduct = () => {
       defaultImage = image
       console.log(`image: ${defaultImage}`)
     }
-    // Note you can create a regEx function to text the URL
 
-    // price errors
+    // PRICE
     if(is_empty(price)){
       console.log('Price is empty')
       setFormData({
@@ -129,30 +115,20 @@ const AddProduct = () => {
       console.log(price)
       setFormData({...formData, errors: { price: ''}})
     }
+    // CLIENT-SIDE VALIDATION END --------
 
-    // Create a newProduct object
-    // We can use ES6 JS Syntax
-    // saying id: id, we can just use id.
+    // Create product object
     const newProduct = {
-      id: uuidv4(),
       name,
       desc,
       image: defaultImage,
       price
     }
-
-    // Now we would send this newProduct object to the ProductList or an API to add it in.
-    // At the moment this component will not save our newProduct anywhere
-    // We will look at fixing this in a little bit.
     console.log(newProduct);
-
-    addProduct(newProduct);
-    // We can do other things are we send off our newProduct
-    // Redirect the front-en back to the homepage or the products page.
+    dispatch( addProduct(newProduct))
+    // Can redirect to home page here...
   };
 
-  // Create a form to add in new products
-  // name, desc, image, price
   return (
    <>
     <h1 className="text-primary">Add New Product</h1>

@@ -1,84 +1,74 @@
-// We can cheat a little here and copy our code from AddProduct and modify it
-// The EditProduct component will not be able to edit anything till we makes some changes.
-import { useState, useEffect } from 'react';
+/**
+ * EditProduct.jsx
+ *
+ *
+ */
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
-// Import useProductUpdate, useGetOne
-import { useProductUpdate, useGetOne } from '../../context/DaisyContext'
+import { useDispatch, useSelector } from 'react-redux';
+import { getProductStatus, selectById, updateProduct } from '../../slices/productSlice';
 
 const EditProduct = () => {
-  // log our props
-  // console.log(props);
+  // Hooks
+  let {id} = useParams() // Get id from URL
+  id = Number(id)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const product = useSelector((state) => selectById(state, id))
+  const status = useSelector(getProductStatus)
 
-  // set up the state
+  // States
   const [ formData, setFormData] = useState({
-    id: '',
-    name: '',
-    desc: '',
-    image: '',
-    price: ''
-  });
-
-  // make use for the useParams hook
-  // This will allow us to pull the id out of the url bar.
-  const {id} = useParams();
-  // log the id
-  console.log(id);
-  // Use the useNavigate hook
-  const navigate = useNavigate();
-
-  // set up the context hooks
-  const getFlower = useGetOne()
-  const updateFlower = useProductUpdate()
-
-  useEffect(() => {
-    const flower = getFlower(id);
-    // Set the state with the new data
-    console.log(flower)
-    setFormData({
-      id: flower.id,
-      name: flower.name,
-      desc: flower.desc,
-      image: flower.image,
-      price: flower.price
-    })
-  }, [id, getFlower]);
-
-  // Destructure our state
-  const { name, desc, image, price} = formData;
-  //  On Change
-  const onChange = e => setFormData({
-    ...formData, [e.target.name]: e.target.value
+    // Original product details
+    prodId: product.prodId,
+    name: product.name,
+    desc: product.desc,
+    image: product.image,
+    price: product.price
   })
+  const { prodId, name, desc, image, price} = formData;
 
-  const onSubmit = e => {
-    // By default a submit button will refreshes the page.
-    // To stop this behaviour we can use the follow function.
-    e.preventDefault();
-    // This is helpful for client-side validation
-    // Check to see that the function is called
-    console.log('onSubmit (EditProducts) running...');
-    console.log(`${id} ${name} ${desc} ${image} ${price}`);
+  if(!product){
+    return (
+      <section className='text-danger'>
+        <h2>Product not found!</h2>
+      </section>
+    )
+  }
 
-    // Check for errors
+  console.log(`EditProject.jsx id: ${id}`)
+  //  On Change
+  const handleTextChange = (e) => {
+    setFormData({
+      ...formData,
+      // for this to work, name of attribute (in Form) needs to be the same as name of variable in user.
+      [e.target.name]: e.target.value
+    })
+  }
 
-    // create our updated flower
+  const handleSubmit = (e) => {
+    e.preventDefault() // disable default submit button behaviour
+
+    // Client-side validation - Check for errors
+
+    // Object for updated flower
     const updFlower = {
-      id,
+      prodId,
       name,
       desc,
       image,
       price
     }
-    // Send the updFlower to an API or state management.
-    console.log(updFlower);
+    console.log('UPDFLOWER: ', updFlower)
 
-    // Call the handle update function
-    updateFlower(id, updFlower);
-
-    // redirect to the home page
-    navigate('/products');
-
-  };
+    try {
+      dispatch(updateProduct({ id: prodId, data: updFlower})).unwrap()
+    } catch (err) {
+      console.log('Failed to update product', err)
+    }
+    // redirect to the products page
+    navigate('/products')
+  }
 
   // Create a form to add in new products
   // name, desc, image, price
@@ -90,7 +80,8 @@ const EditProduct = () => {
         Edit the flower below:
       </div>
       <div className="card-body">
-        <form onSubmit={e => onSubmit(e)}>
+        <form onSubmit={handleSubmit}>
+          {/* Name */}
           <div className="mb-3">
             <label htmlFor="name">Flower name:</label>
             <input
@@ -100,9 +91,11 @@ const EditProduct = () => {
               name="name"
               placeholder="The new flower name"
               value={name}
-              onChange={e => onChange(e)}
+              onChange={handleTextChange}
             />
           </div>
+
+          {/* Description */}
           <div className="mb-3">
             <label htmlFor="desc">Flower description:</label>
             <input
@@ -112,9 +105,11 @@ const EditProduct = () => {
               name="desc"
               placeholder="The flower description"
               value={desc}
-              onChange={e => onChange(e)}
+              onChange={handleTextChange}
             />
           </div>
+
+          {/* Image */}
           <div className="mb-3">
             <label htmlFor="image">Flower image URL:</label>
             <input
@@ -124,9 +119,11 @@ const EditProduct = () => {
               name="image"
               placeholder="https://myflower.net.url"
               value={image}
-              onChange={e => onChange(e)}
+              onChange={handleTextChange}
             />
           </div>
+
+          {/* Price */}
           <div className="mb-3">
             <label htmlFor="price">Flower price:</label>
             <input
@@ -136,9 +133,11 @@ const EditProduct = () => {
               name="price"
               placeholder="0.00"
               value={price}
-              onChange={e => onChange(e)}
+              onChange={handleTextChange}
             />
           </div>
+
+          {/* Submit Button */}
           <div className="d-grid gap2-2">
             <input type="submit" value="Update Flower" className="btn btn-info text-white" />
           </div>

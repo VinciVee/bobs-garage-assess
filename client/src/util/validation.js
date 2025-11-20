@@ -2,11 +2,12 @@
 // This file will hold our client-side validation functions.
 
 /**
-  Create an is_empty function
-  Function: is_empty
-  param: value, the input we wish to check.
-  This function will check if the passed in value is undefined, null, and empty object or an empty string.
-  return true if any of the test are true, false otherwise
+ * PURPOSE: Create an is_empty function
+ * FUNCTION: is_empty
+ * PARAM: value, the input we wish to check.
+ * This function will check if the passed in value is undefined,
+ * null, and empty object or an empty string.
+ * return true if any of the test are true, false otherwise
  *
  */
 export const is_empty = (value) =>
