@@ -5,140 +5,59 @@
  * Purpose:
  *
  */
-
-// Bring in express
+// Import Packages
 const express = require('express');
-// Bring in the config file
-const config = require('./config/config');
-// Bring in the database models
+require('dotenv').config()
 const db = require('./models')
+const cors = require('cors')
+const corsOptions = require('./config/corsOptions')
+
+// Import config & routes
+const config = require('./config/config')
+const apiErrorHandler = require('./middleware/apiErrorHandler')
+const ApiError = require('./utilities/ApiError')
+const routes = require('./routes/routes')
+
+// Custom debug logs
+const startlog = require('debug')('app:startup')
 
 // Initiailise express app variable
 const app = express();
 
-// Destructure our models from the database
-const { Product, User } = db.sequelize.models
+// ---------- MIDDLEWARE ----------
+app.use(cors(corsOptions))
 
-// Initialise middleware
-// This middleware allows the server to parse incomming requests with JSON data
+// Default middleware for parsing
 app.use(express.json());
-// This middleware allows the server to parse incomming requests with url-encoded data
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
-
-// Routes can be get, post, put or delete
-// These are our CRUD - CREATE, READ, UPDATE, DELETE
-
-// Crete a route to handle '/'
-app.get('/', (req, res) => {
-  console.log('/ - get');
-  res.send('Home Page');
-});
+// Express endpoints
+startlog('Accessing endpoints under /api ...')
+app.use('/api', routes())
 
 // Create a test route
-app.get('/test', (req, res) => {
-  console.log('/test - get');
-  res.status(200).send(' I am a server, and I am up!');
-});
+// app.get('/test', (req, res) => {
+//   console.log('/test - get');
+//   res.status(200).send(' I am a server, and I am up!');
+// });
+
+// ERROR HANDLERS: 404 NOT FOUND
+app.use((req, res, next) => {
+  // const err = new Error('404 - Resource Not Found')
+  // err.status = 404
+  // res.status(err.status).send(err)
+  next(ApiError.notFound())
+})
+
+// ERROR HANDLER: 400s & 500s ("everything else")
+app.use(apiErrorHandler)
 
 /*
-  GET ALL SERVICES
-  Path:
-  Request:
-  Type:
-  Description: Create routes for Bob's Garage - Services
-*/
-app.get('/api/products', (req, res) => {
-  // log the path and request
-  console.log('/api/products - GET');
-  // Send response
-  res.send('Get all Products, GET');
-});
-
-/*
-  GET A SINGLE SERVICE
-  Path:
-  Request:
-  Type:
-  Description: :id is for dynamic routes
-*/
-app.get('/api/products/edit/:id', (req, res) => {
-  // log the path and request
-  console.log('/api/products/edit/:id - GET');
-  // Send response
-  res.send('Get a single Product by id, GET');
-});
-
-/*
-  UPDATING A SERVICE
-  Path:
-  Request:
-  Type:
-  Description:
-*/
-app.put('/api/products/edit/:id', (req, res) => {
-  // log the path and request
-  console.log('/api/products/edit/:id - PUT');
-  // Send response
-  res.send('Update a product by id, PUT');
-});
-
-/*
-  DELETING A SERVICE
-  Path: /api/products/delete:id
-  Request: DELETE
-  Type: auth route
-  Description:
-*/
-app.delete('/api/products/delete/:id', (req, res) => {
-  // log the path and request
-  console.log('/api/products/delete/:id - DELETE');
-  // Send response
-  res.send('Delete a Product, DELETE');
-});
-
-/*
-  ADDING A SERVICE
-  Path: /api/products/add
-  Request: POST
-  Type: auth route - Only admin can add new services
-  Description: save a new product to the database using the Product model
-*/
-app.post('/api/products/add', async (req, res) => {
-  // log the path and request
-  console.log('/api/products/add - POST');
-  // Create a dummy product to add in
-  // This allows us to send the data to the database and save it in the products table. What we send needs to match our model
-  const product = await Product.create({
-    name: 'New flower name',
-    desc: 'A new flower added to the database',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYoR2rpqdWmu6bsR0BZb6y2Lw2TaglVVB8TQ&s',
-    price: 2.45
-  })
-  // The response from the database will be sorted in the product variable
-  // Error or the record that was just added to the database.
-  console.log(product.toJSON())
-
-  // Send response
-  res.send(product);
-});
-
-/*
-  Modify the Listen so we can sync with our database
-  use the sync() method
+  APP.LISTEN
   Purpose: will check if the tables exist - if they do not exist, then it will create them
-  Note: be careful using the sync() method - a wrong setup could delete everything in the the database
 */
 db.sequelize.sync().then(() => {
-  // Listen to the port
   app.listen(config.port,
     () => console.log(`Server is running on port: ${config.port}`)
   )
 })
-
-/*
-  We actually need to run MySQL database before we start the server
-  Wamp / mamp / Xampp running with MySQL installed.
-  Make sure that your username and password match what you need for the database
-  Default:
-*/

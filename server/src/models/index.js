@@ -1,20 +1,16 @@
-// src/models/index.js
-// This file will hold our database information and Models
-
-// Import the sequelize package
-// This is an ORM package (object-relational mapping package)
-// We need to package to initialize our database and create the models for our tables
-
+/**
+ * src/models/index.js
+ * This file will hold our database information and Models
+ *
+ */
+// Import Sequelize - ORM package
 const { Sequelize, DataTypes } = require('sequelize')
-// Import the config
 const config = require('../config/config')
 
 // Create a variable to hold our db information
 let db = {}
 
 // Create a new sequelize object
-// Pass in our database details
-// Initialize our database connection with the options we specified in our config
 const sequelize = new Sequelize(
   config.db.database,
   config.db.user,
@@ -22,9 +18,7 @@ const sequelize = new Sequelize(
   config.db.options
 )
 
-// Set up our models
-// Configure our models product and user tables
-// We can use the defined method to set up our models
+// MODELS
 const Product = sequelize.define('Product',
   {
     prodId:{
@@ -35,7 +29,7 @@ const Product = sequelize.define('Product',
     name: { type: DataTypes.STRING },
     desc: { type: DataTypes.TEXT('long') },
     image: { type: DataTypes.STRING },
-    price: { type: DataTypes.REAL(3,2), allowNull: false }
+    price: { type: DataTypes.DECIMAL(8,2), allowNull: false }
   }
 )
 
@@ -55,7 +49,7 @@ const User = sequelize.define('User',
   }
 )
 
-// Set up our variables
+// SEQUELIZE VARIABLES
 // Sequalize refers to library itself - gives access to class and methods
 // sequelize refers to an instance of Sequelize - represents connection to one database
 db.sequelize = sequelize
