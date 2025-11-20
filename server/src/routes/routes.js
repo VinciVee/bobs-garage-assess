@@ -7,8 +7,7 @@ const productRoutes = require('./productRoutes')
 
 // Endpoints for "/" path
 module.exports = () => {
-  // HOME/TEST Endpoint
-  // '/' - route path for server
+  // HOME/TEST Endpoint: /api/
   router.get('/', (req, res, next) => { // part of express tool belt
     res.send("Welcome to Bob's Garage 👨‍🔧")
   })

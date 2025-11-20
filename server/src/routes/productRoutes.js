@@ -12,7 +12,7 @@ module.exports = () => {
     (GET) /api/products
     Type: Public
   */
-  router.get('/', async (req, res) => {
+  router.get('/', async (req,res,next) => {
     // log the path and request
     console.log('/api/products - GET')
 
@@ -34,7 +34,7 @@ module.exports = () => {
     (GET) /api/products/edit/:id
     Type: Public
   */
-  router.get('/:id', async (req, res) => {
+  router.get('/:id', async (req,res,next) => {
     // log the path and request
     console.log('/api/products/:id - GET')
 
@@ -60,7 +60,7 @@ module.exports = () => {
     (PUT) /api/products/edit/:id
     Type: Private
   */
-  router.put('/edit/:id', async (req, res) => {
+  router.put('/edit/:id', async (req,res,next) => {
 
     try {
       let id = Number(req.params.id)
@@ -91,7 +91,7 @@ module.exports = () => {
     (DELETE) /api/products/delete:id
     Type: Private - staff & admin
   */
-  router.delete('/delete/:id', (req, res) => {
+  router.delete('/delete/:id', (req,res,next) => {
     try {
       // log the path and request
       let id = Number(req.params.id)
@@ -110,7 +110,7 @@ module.exports = () => {
     (POST) /api/products/add
     Type: Private - staff & admin only
   */
-  router.post('/add', async (req, res) => {
+  router.post('/add', async (req,res,next) => {
     console.log('/api/products/add - POST')
 
     const { name, desc, image, price } = req.body

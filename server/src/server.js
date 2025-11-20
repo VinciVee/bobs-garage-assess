@@ -9,8 +9,11 @@
 const express = require('express');
 require('dotenv').config()
 const db = require('./models')
+const helmet = require('helmet')
 const cors = require('cors')
 const corsOptions = require('./config/corsOptions')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 // Import config & routes
 const config = require('./config/config')
@@ -25,6 +28,7 @@ const startlog = require('debug')('app:startup')
 const app = express();
 
 // ---------- MIDDLEWARE ----------
+app.use(helmet())
 app.use(cors(corsOptions))
 
 // Default middleware for parsing
@@ -34,12 +38,6 @@ app.use(express.urlencoded({ extended: false }));
 // Express endpoints
 startlog('Accessing endpoints under /api ...')
 app.use('/api', routes())
-
-// Create a test route
-// app.get('/test', (req, res) => {
-//   console.log('/test - get');
-//   res.status(200).send(' I am a server, and I am up!');
-// });
 
 // ERROR HANDLERS: 404 NOT FOUND
 app.use((req, res, next) => {
