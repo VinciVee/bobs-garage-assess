@@ -4,6 +4,7 @@ const router = express.Router()
 
 const authRoutes = require('./authRoutes')
 const productRoutes = require('./productRoutes')
+const userRoutes = require('./userRoutes')
 
 // Endpoints for "/" path
 module.exports = () => {
@@ -17,6 +18,9 @@ module.exports = () => {
 
   // AUTH ROUTES: /api/auth
   router.use('/auth', authRoutes())
+
+  // USER ROUTES: /api/user
+  router.use('/users', userRoutes())
 
   return router
 }

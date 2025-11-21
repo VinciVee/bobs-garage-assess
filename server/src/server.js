@@ -12,8 +12,6 @@ const db = require('./models')
 const helmet = require('helmet')
 const cors = require('cors')
 const corsOptions = require('./config/corsOptions')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 
 // Import config & routes
 const config = require('./config/config')
@@ -21,7 +19,9 @@ const apiErrorHandler = require('./middleware/apiErrorHandler')
 const ApiError = require('./utilities/ApiError')
 const routes = require('./routes/routes')
 
-// Custom debug logs
+// Custom debug logs & middleware
+const auth = require('./middleware/auth')
+const admin = require('./middleware/admin')
 const startlog = require('debug')('app:startup')
 
 // Initiailise express app variable

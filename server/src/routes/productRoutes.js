@@ -4,14 +4,14 @@ const router = express.Router()
 const db = require('../models')
 const { Product } = db.sequelize.models
 
+const auth = require('../middleware/auth')
+const admin = require('../middleware/admin')
 const ApiError = require('../utilities/ApiError')
 
 module.exports = () => {
-  /*
-    GET ALL PRODUCTS
-    (GET) /api/products
-    Type: Public
-  */
+  // GET ALL PRODUCTS
+  // (GET) /api/products
+  // Type: Public
   router.get('/', async (req,res,next) => {
     // log the path and request
     console.log('/api/products - GET')
@@ -29,11 +29,10 @@ module.exports = () => {
     }
   })
 
-  /*
-    GET A SINGLE PRODUCT
-    (GET) /api/products/edit/:id
-    Type: Public
-  */
+
+  // GET A SINGLE PRODUCT
+  // (GET) /api/products/edit/:id
+  // Type: Public
   router.get('/:id', async (req,res,next) => {
     // log the path and request
     console.log('/api/products/:id - GET')
@@ -55,13 +54,11 @@ module.exports = () => {
     }
   })
 
-  /*
-    UPDATING A PRODUCT
-    (PUT) /api/products/edit/:id
-    Type: Private
-  */
-  router.put('/edit/:id', async (req,res,next) => {
 
+  // UPDATING A PRODUCT
+  // (PUT) /api/products/edit/:id
+  // Type: Private
+  router.put('/edit/:id', [auth, admin], async (req,res,next) => {
     try {
       let id = Number(req.params.id)
       console.log(`/api/products/edit/:${id} - PUT`)
@@ -86,12 +83,11 @@ module.exports = () => {
     }
   })
 
-  /*
-    DELETING A PRODUCT
-    (DELETE) /api/products/delete:id
-    Type: Private - staff & admin
-  */
-  router.delete('/delete/:id', (req,res,next) => {
+
+  // DELETING A PRODUCT
+  // (DELETE) /api/products/delete:id
+  // Type: Private - staff & admin
+  router.delete('/delete/:id', [auth, admin], (req,res,next) => {
     try {
       // log the path and request
       let id = Number(req.params.id)
@@ -105,12 +101,11 @@ module.exports = () => {
     }
   })
 
-  /*
-    ADDING A PRODUCT
-    (POST) /api/products/add
-    Type: Private - staff & admin only
-  */
-  router.post('/add', async (req,res,next) => {
+
+  // ADDING A PRODUCT
+  // (POST) /api/products/add
+  // Type: Private - staff & admin only
+  router.post('/add', [auth, admin], async (req,res,next) => {
     console.log('/api/products/add - POST')
 
     const { name, desc, image, price } = req.body
@@ -120,7 +115,6 @@ module.exports = () => {
       image,
       price
     })
-
     console.log(product.toJSON())
 
     try {

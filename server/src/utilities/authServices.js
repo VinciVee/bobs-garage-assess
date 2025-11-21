@@ -3,16 +3,17 @@ const db = require('../models')
 const { User } = db.sequelize.models
 
 const bcrypt = require('bcrypt')
+const _ = require('lodash')
 const jwt = require('jsonwebtoken')
 
 module.exports = {
-  // Find duplicate user
+  // FIND EMAIL IN USER LIST
   async findUser(userEmail){
     const usersRef = await User.findOne({ where: { email: userEmail } })
     return usersRef
   },
 
-  // Hash password
+  // HASH PASSWORD
   async hashPassword(password){
     const salt = await bcrypt.genSalt(10)
     const hashPassword = await bcrypt.hash(password, salt)
@@ -20,7 +21,20 @@ module.exports = {
     return hashPassword
   },
 
-  // Mint the token
+  // REMOVE PASSWORD FROM USER DETAILS BEFORE SENDING TO CLIENT
+  // async userDetailsToJSON(id){
+  // // Structure the data payload to be saved within the token
+  //   const usersRef = db.collection('users')
+  //   const user = await usersRef.doc(id).get()
+  //   const userJSON = _.omit(
+  //     { id: id, ...user.data() },
+  //     'password'
+  //   )
+  //   console.log(userJSON)
+  //   return userJSON
+  // },
+
+  // MINT TOKEN
   jwtSignUser(user){
     const payload = {
       user: {
@@ -28,24 +42,21 @@ module.exports = {
         firstName: user.firstName,
         email: user.email,
         isAdmin: user.isAdmin
-      }
-    }
+    }}
     const secret = config.authentication.jwtSecret
     const tokenExpireTime = 60 * 60 * 24 // Time To Live (TTL) - 24 hrs in seconds
-
     const token = jwt.sign(
       payload,
       secret,
-      { expiresIn: tokenExpireTime }
-    )
-
+      { expiresIn: tokenExpireTime })
     return token
   },
 
+  // COMPARE PASSWORD
   async comparePassword(dbPassword, password){
     const passwordMatch = await bcrypt.compare(
       password, dbPassword
     )
     return passwordMatch
-  }
+  },
 }
