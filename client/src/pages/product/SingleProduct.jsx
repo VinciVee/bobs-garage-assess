@@ -9,7 +9,9 @@ import { deleteProduct } from '../../slices/productSlice';
 const SingleProduct = ({flower}) => {
   const dispatch = useDispatch()
 
-  const onDelete = (id, e) => {
+  console.log('SingleProduct.jsx, flower object:', flower)
+
+  const handleDelete = (id, e) => {
     console.log('onDelete called. SingleProducts.jsx');
     // console.log(`Id clicked: ${id}`);
     // log out our event paramenter
@@ -41,7 +43,7 @@ const SingleProduct = ({flower}) => {
                     <FaPencilAlt /> Edit
                   </button>
                 </Link>
-                <button type='button' className='btn btn-info text-danger p-3 fw-bold' onClick={e => onDelete(prodId, e) }>
+                <button type='button' className='btn btn-info text-danger p-3 fw-bold' onClick={(e) => handleDelete(prodId, e) }>
                   <FaTimes /> Delete
                 </button>
               </IconContext.Provider>

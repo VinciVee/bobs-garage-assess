@@ -10,8 +10,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Provider } from 'react-redux'
 import { store } from './store/store.js'
 import { fetchAllProducts } from './slices/productSlice.js';
+import { fetchUserList } from './slices/userSlice.js';
 // fetch the products from the api
 store.dispatch(fetchAllProducts())
+store.dispatch(fetchUserList)
 
 import App from './App.jsx';
 

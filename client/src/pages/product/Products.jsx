@@ -16,13 +16,13 @@ const Products = () => {
 
   switch (productStatus) {
     case 'loading':
-      console.log('Loading...')
+      console.log('Loading the products...')
       return (
         <p>Loading...</p>
       )
 
     case 'failed':
-      console.log('Errors...')
+      console.log('Error: failed at loading the products...')
       return (
         <div className='text-danger'>
           <p>{error}</p>
@@ -30,24 +30,27 @@ const Products = () => {
         </div>
       )
 
-    default:
+    case 'succeeded':
       return (
         <>
           <div>
             <h2>Bob's Garage</h2>
             <div className="row">
-              {
-                productList.map( flower => (
+              {productList.map((flower) =>
                   <SingleProduct
-                    key={flower.prodId}
-                    flower={flower}
+                      key={flower.prodId}
+                      flower={flower}
                   />
-                ))
-              }
+              )}
             </div>
           </div>
         </>
       )
+
+    default:
+      console.log('Default case for productList status - Products.jsx')
+      return null
+
   }
 }
 

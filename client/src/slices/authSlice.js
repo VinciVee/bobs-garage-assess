@@ -14,28 +14,26 @@ const initialState = {
   isAuth: false,
   isAdmin: false,
   status: 'idle', // idle, loading, succeeded, failed
-  errors: null
+  error: null
 }
 
 // ACTIONS
 // LOGIN
-export const login = createAsyncThunk('auth/Login', async ({ email, password }) => {
-  console.log('Logging in...')
+export const login = createAsyncThunk('auth/login',
+  async ({ email, password }) => {
+  console.log('Logging in... authSlice')
   try {
     const response = await authService.login({ email, password })
-    console.log(response.data.token)
 
     if(response.data){
       if(response.status === 400){
         throw Error({ message: response.data })
       }
-
       localStorage.setItem('token', response.data.token)
       setAuthToken(localStorage.token)
       // Get logged-in user's details
-      // const res = await axios.get(`${baseURL}`)
-      // return res.data
-      return response.data
+      const res = await authService.loadUser()
+      return res.data
     }
   } catch (err) {
     console.log('Error logging in, ', err.message)
@@ -44,8 +42,8 @@ export const login = createAsyncThunk('auth/Login', async ({ email, password }) 
 })
 
 // REGISTER
-export const register = createAsyncThunk('auth/Register', async(newUser) => {
-  console.log('Registering new user...')
+export const register = createAsyncThunk('auth/register', async(newUser) => {
+  console.log('Registering new user...authSlice')
   try {
     const response = await authService.register(newUser)
     console.log(response.data)
@@ -58,26 +56,24 @@ export const register = createAsyncThunk('auth/Register', async(newUser) => {
       localStorage.setItem('token', response.data.token)
       setAuthToken(localStorage.token)
       // Get logged-in user's details
-      // const res = await axios.get(`${baseURL}`)
-      // return res.data
-      return response.data
+      const res = await authService.loadUser()
+      return res.data
     }
-
   } catch (err) {
     console.log('Error registering new user, ', err.message)
     return err.message
   }
 })
 
-// LOAD USER
+// GET LOADUSER
 export const loadUser = createAsyncThunk('auth/loadUser', async () => {
   try {
-    const response = await authService.login()
-    console.log(response.data)
+    const response = await authService.loadUser()
+    console.log('loadUser (authSlice) response data: ',response.data)
     return response.data
-  } catch (error) {
-    console.log(error.message)
-    return error.message
+  } catch (err) {
+    console.log(err.message)
+    return err.message
   }
 })
 
@@ -94,7 +90,7 @@ const authSlice = createSlice({
       state.isAdmin = false
       state.user = null
       state.status = 'idle'
-      state.errors = null
+      state.error = null
     }
   },
 
@@ -107,10 +103,11 @@ const authSlice = createSlice({
     .addCase(login.fulfilled, (state, action) => {
       state.status = 'succeeded'
       state.isAuth = true
+      console.log('(AuthSlice - login payload: ', action.payload.isAdmin)
       state.isAdmin = action.payload.isAdmin
       state.token = localStorage.getItem('token')
       state.user = action.payload
-      state.errors = null
+      state.error = null
     })
     .addCase(login.rejected, (state, action) => {
       state.status = 'failed'
@@ -118,7 +115,7 @@ const authSlice = createSlice({
       state.isAdmin = false
       state.token = null
       state.user = null
-      state.errors = action.payload
+      state.error = action.payload
     })
 
     // LOAD USER
@@ -129,9 +126,9 @@ const authSlice = createSlice({
       state.status = 'succeeded'
       state.isAuth = true
       state.isAdmin = action.payload.isAdmin
-      state.token = localStorage.getItem('token')
+      console.log('(AuthSlice - LoadUser payload: ', action.payload.isAdmin)
       state.user = action.payload
-      state.errors = null
+      state.error = null
     })
     .addCase(loadUser.rejected, (state, action) => {
       state.status = 'failed'
@@ -139,7 +136,7 @@ const authSlice = createSlice({
       state.isAdmin = false
       state.token = null
       state.user = null
-      state.errors = action.payload
+      state.error = action.payload
     })
 
     // REGISTER
@@ -152,7 +149,7 @@ const authSlice = createSlice({
       state.isAdmin = action.payload.isAdmin
       state.token = localStorage.getItem('token')
       state.user = action.payload
-      state.errors = null
+      state.error = null
     })
     .addCase(register.rejected, (state, action) => {
       state.status = 'failed'
@@ -160,10 +157,9 @@ const authSlice = createSlice({
       state.isAdmin = false
       state.token = null
       state.user = null
-      state.errors = action.payload
+      state.error = action.payload
     })
-  }
-})
+}})
 
 // Export selectors
 export const getIsAuth = state => state.auth.isAuth

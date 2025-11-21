@@ -94,7 +94,7 @@ function Register() {
   }
 
   return (
-    <AuthForm title="Sign Up" authform>
+    <AuthForm title="Register" authform>
       <Form onSubmit={handleSubmit}>
         {/* FIRSTNAME */}
         <FloatingLabel
@@ -172,6 +172,7 @@ function Register() {
             <Form.Control
               type="password"
               name="passwordCompare"
+              onChange={handleChange}
               value={passwordCompare}
               className={`form-control ${errors.passwordCompare ? "is-invalid": "is-valid"}`}
               placeholder="Password Confirmation"

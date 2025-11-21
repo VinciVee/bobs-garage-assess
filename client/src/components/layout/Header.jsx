@@ -17,8 +17,7 @@ const Header = ({ branding = "My App" }) => {
   const isAuth = useSelector(getIsAuth)
 
   const leave = (e) => {
-    console.log('Logout click')
-    console.log(e.target)
+    console.log('Logout click, e: ', e.target)
     dispatch(logout())
   }
 
@@ -70,9 +69,6 @@ const Header = ({ branding = "My App" }) => {
       </div>
     </nav>
   );
-  // We should not use <a> tags in a JSX component.
-
-
 }
 
 // Header.propTypes = {

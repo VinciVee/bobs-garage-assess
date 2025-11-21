@@ -8,15 +8,23 @@ async function register(data){
 }
 
 // LOGIN POST REQUEST
-async function login(data){
-  const response = await api.post('/api/auth/login', data)
+async function login({ email, password }){
+  const response = await api.post('/api/auth/login', {email, password})
+  console.log(response?.data)
+  return response
+}
+
+// LOADUSER GET REQUEST
+async function loadUser() {
+  const response = await api.get('/api/auth')
   console.log(response?.data)
   return response
 }
 
 const authService = {
   register,
-  login
+  login,
+  loadUser
 }
 
 export default authService

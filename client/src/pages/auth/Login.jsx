@@ -6,7 +6,7 @@ import { is_Empty } from '../../util/validation'
 
 // React tools
 import Spinner from "react-bootstrap/Spinner"
-import { FloatingLabel, Form, Button } from "react-bootstrap"
+import { FloatingLabel, Form, Button, FormControl } from "react-bootstrap"
 
 // Local Modules
 import * as styles from './Login.css'
@@ -50,6 +50,7 @@ function Login() {
       dispatch(login({ email, password }))
       navigate('/')
     } catch (error) {
+      console.log('error loggin in... -handleSubmit, Login.jsx')
       setTimeout(() => {setLoading(false), 1000})
     }
   }
@@ -64,15 +65,19 @@ function Login() {
           className="mb-3" >
             <Form.Control
               type="email"
-              className={`form-control ${errors.email ? "is-invalid": "is-valid"}`}
+              // className={`form-control ${errors.email ? "is-invalid": "is-valid"}`}
+              isInvalid={!!errors.email}
               placeholder="name@example.com"
               name="email"
               onChange={handleChange}
               value={email} />
+            <Form.Control.Feedback type="invalid">
+              { errors.email }
+            </Form.Control.Feedback>
         </FloatingLabel>
-        { errors.email && <div className='invalid-feedback'>
-          { errors.email}
-          </div>}
+        {/* { errors.email && <div className='invalid-feedback'>
+          { errors.email }
+          </div> } */}
 
         {/* PASSWORD */}
         <FloatingLabel
