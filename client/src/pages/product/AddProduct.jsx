@@ -6,7 +6,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addProduct } from "../../slices/productSlice";
-import { alpha, is_empty, isValidPrice} from "../../util/validation"
+import { alpha, is_Empty, isValidPrice} from "../../util/validation"
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
@@ -37,7 +37,7 @@ const AddProduct = () => {
     // CLIENT-SIDE VALIDATION --------
     // https://getbootstrap.com/docs/5.3/forms/validation/
     // NAME
-    if (is_empty(name)){
+    if (is_Empty(name)){
       console.log('Name empty')
       setFormData({
         ...formData,
@@ -67,7 +67,7 @@ const AddProduct = () => {
 
     // IMAGE
     let defaultImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYoR2rpqdWmu6bsR0BZb6y2Lw2TaglVVB8TQ&s'
-    if(is_empty(image)){
+    if(is_Empty(image)){
       console.log('Use default image')
       setFormData({ ...formData, image: defaultImage })
     }else {
@@ -76,7 +76,7 @@ const AddProduct = () => {
     }
 
     // PRICE
-    if(is_empty(price)){
+    if(is_Empty(price)){
       console.log('Price is empty')
       setFormData({
         ...formData,

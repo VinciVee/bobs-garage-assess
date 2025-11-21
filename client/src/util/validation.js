@@ -2,15 +2,15 @@
 // This file will hold our client-side validation functions.
 
 /**
- * PURPOSE: Create an is_empty function
- * FUNCTION: is_empty
+ * PURPOSE: Create an is_Empty function
+ * FUNCTION: is_Empty
  * PARAM: value, the input we wish to check.
  * This function will check if the passed in value is undefined,
  * null, and empty object or an empty string.
  * return true if any of the test are true, false otherwise
  *
  */
-export const is_empty = (value) =>
+export const is_Empty = (value) =>
   value === undefined ||
   value === null ||
   (typeof value === 'object' && Object.keys(value).length === 0) ||

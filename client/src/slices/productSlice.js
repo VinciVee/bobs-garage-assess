@@ -4,7 +4,6 @@
  */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import productService from "../services/productService";
-import EditProduct from "../pages/product/EditProduct";
 
 // INITIAL STATE
 const initialState = {
