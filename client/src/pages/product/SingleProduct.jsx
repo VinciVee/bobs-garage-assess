@@ -3,13 +3,16 @@ import { Link } from 'react-router';
 import { FaTimes, FaPencilAlt } from 'react-icons/fa';
 import { IconContext } from 'react-icons/lib';
 import * as styles from './SingleProduct.css'
-import { useDispatch } from 'react-redux'
-import { deleteProduct } from '../../slices/productSlice';
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteProduct } from '../../slices/products/productThunks';
+import { getIsAdmin, getIsAuth } from '../../slices/auth/authSlice';
 
-const SingleProduct = ({flower}) => {
+const SingleProduct = ({product}) => {
   const dispatch = useDispatch()
+  const isAdmin = useSelector(getIsAdmin)
+  const isAuth = useSelector(getIsAuth)
 
-  console.log('SingleProduct.jsx, flower object:', flower)
+  console.log('SingleProduct.jsx, service object:', product)
 
   const handleDelete = (id, e) => {
     console.log('onDelete called. SingleProducts.jsx');
@@ -25,7 +28,7 @@ const SingleProduct = ({flower}) => {
   }
 
 
-  const { prodId, name, desc, image, price } = flower;
+  const { id, name, desc, image, price } = product;
   return (
     <div className="col-md-4">
       <div className={`card ${styles.cardSize}`}>
@@ -37,16 +40,19 @@ const SingleProduct = ({flower}) => {
               <a href="#" className="btn btn-primary">Add to cart</a>
             </div>
             <div className="d-grid card-footer bg-secondary-subtle gap-3">
-              <IconContext.Provider value={{ size: '2em'}}>
-                <Link to={`/edit/${prodId}`}>
-                  <button type='button' className='btn btn-warning p-3 text-primary fw-bold'>
-                    <FaPencilAlt /> Edit
+              { isAdmin && isAuth ? (
+                <IconContext.Provider value={{ size: '2em'}}>
+                  <Link to={`/edit/${id}`}>
+                    <button type='button' className='btn btn-warning p-3 text-primary fw-bold'>
+                      <FaPencilAlt /> Edit
+                    </button>
+                  </Link>
+                  <button type='button' className='btn btn-info text-danger p-3 fw-bold' onClick={(e) => handleDelete(id, e) }>
+                    <FaTimes /> Delete
                   </button>
-                </Link>
-                <button type='button' className='btn btn-info text-danger p-3 fw-bold' onClick={(e) => handleDelete(prodId, e) }>
-                  <FaTimes /> Delete
-                </button>
-              </IconContext.Provider>
+                </IconContext.Provider>
+                ) : (<div> Service Footer </div>)
+              }
             </div>
         </div>
     </div>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useDispatch } from 'react-redux'
-import { login } from '../../slices/authSlice'
+import { login } from '../../slices/auth/authThunks'
 import { is_Empty } from '../../util/validation'
 
 // React tools

@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { Fragment } from 'react'
 import { Link } from 'react-router';
 
-import {FaHome, FaQuestion, FaPlus, FaSignInAlt, FaDoorOpen, FaSignOutAlt, FaUsers } from 'react-icons/fa';
-import { GiFlowerPot } from "react-icons/gi";
-import { IconContext } from 'react-icons/lib';
-import { useDispatch, useSelector } from 'react-redux';
-import { logout, getIsAuth, getIsAdmin } from '../../slices/authSlice';
+import {FaHome, FaQuestion, FaPlus, FaSignInAlt, FaDoorOpen, FaSignOutAlt, FaUsers } from 'react-icons/fa'
+import { GiFlowerPot } from "react-icons/gi"
+import { IconContext } from 'react-icons/lib'
+import { useDispatch, useSelector } from 'react-redux'
+import { logout, getIsAuth, getIsAdmin } from '../../slices/auth/authSlice'
 
 
 const Header = ({ branding = "My App" }) => {

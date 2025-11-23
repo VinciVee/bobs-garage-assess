@@ -2,7 +2,7 @@
 import { Navigate, Outlet } from "react-router"
 import { useSelector } from 'react-redux'
 
-import { getIsAdmin, getIsAuth } from '../../slices/authSlice'
+import { getIsAdmin, getIsAuth } from '../../slices/auth/authSlice.js'
 
 import DashboardLinks from './DashboardLinks.jsx'
 
@@ -24,11 +24,11 @@ function Dashboard() {
     <main className='row'>
       <aside className='col-2 bg-info-subtle'>
         <DashboardLinks />
+      </aside>
         <section className="col-10 bg-warning-subtle">
           <h2>Admin Dashboard</h2>
             <Outlet />
         </section>
-      </aside>
     </main>
   )
 }

@@ -1,29 +1,39 @@
 import api from './api'
 
 // GET ALL REQUEST
-function getAllProducts(){
-  return api.get('/api/products')
+async function getAllProducts(){
+  const response =  await api.get('/api/products')
+  console.log('[productService] response:\n', response?.data)
+  return response
 }
 
 // GET ONE PRODUCT Request
-function getProductById(id){
-  return api.get(`/api/products/${id}`)
+async function getProductById(id){
+  const response =  await api.get(`/api/products/${id}`)
+  console.log(response?.data)
+  return response
 }
 
 // ADD PRODUCT Request
-function addProduct(data){
-  return api.post('/api/products/add', data)
+async function addProduct(data){
+  const response =  await api.post('/api/products/add', data)
+  console.log(response?.data)
+  return response
 }
 
 // UPDATE PRODUCT Request
-function updateProduct(id, data){
+async function updateProduct(id, data){
   console.log(`Sending update request, id: ${id}`)
-  return api.put(`/api/products/edit/${id}`, data)
+  const response =  await api.put(`/api/products/edit/${id}`, data)
+  console.log(response?.data)
+  return response
 }
 
 // DELETE PRODUCT Request
-function deleteProduct(id){
-  return api.delete(`/api/products/delete/${id}`)
+async function deleteProduct(id){
+  const response =  await api.delete(`/api/products/delete/${id}`)
+  console.log(response?.data)
+  return response
 }
 
 const productService = {

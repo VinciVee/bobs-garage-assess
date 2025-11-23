@@ -5,7 +5,7 @@
  */
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addProduct } from "../../slices/productSlice";
+import { addProduct } from "../../slices/products/productThunks";
 import { alpha, is_Empty, isValidPrice} from "../../util/validation"
 
 const AddProduct = () => {

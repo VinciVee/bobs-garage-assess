@@ -1,29 +1,38 @@
 import api from './api'
 
 // GET ALL USERS REQUEST
-function getAllUsers(){
-  return api.get('/api/users')
+async function getAllUsers(){
+  const response = await api.get('/api/users')
+  console.log(response?.data)
+  return response
 }
 
 // GET ONE USER Request
-function getUserById(id){
-  return api.get(`/api/users/${id}`)
+async function getUserById(id){
+  const response = api.get(`/api/users/${id}`)
+  console.log(response?.data)
+  return response
 }
 
 // ADD USER Request
-function addUser(data){
-  return api.post('/api/users/add', data)
+function addUser(newUser){
+  const response = api.post('/api/users/add', newUser)
+  console.log(response?.data)
+  return response
 }
 
 // UPDATE USER Request
-function updateUser(id, data){
-  console.log(`Sending update request, id: ${id}`)
-  return api.put(`/api/users/edit/${id}`, data)
+async function updateUser({id, data}){
+  const response = await api.put(`/api/users/edit/${id}`, data)
+  console.log(response?.data)
+  return response
 }
 
 // DELETE USER Request
-function deleteUser(id){
-  return api.delete(`/api/users/delete/${id}`)
+async function deleteUser(id){
+  const response = await api.delete(`/api/users/delete/${id}`)
+  console.log(response?.data)
+  return response
 }
 
 const userService = {

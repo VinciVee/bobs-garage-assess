@@ -11,20 +11,20 @@ function SingleUser({ user }) {
 
   return (
     <tr>
-      <td>{user.userId}</td>
+      <td>{user.id}</td>
       <td>{user.firstName}</td>
       <td>{user.lastName}</td>
       <td>{user.email}</td>
       <td>{user.isAdmin ? 'Yes' : 'No'}</td>
       <td>{user.image}</td>
       <td>
-        <Link to={`/admin/users.edit/${user.userId}`} >
+        <Link to={`/admin/users.edit/${user.id}`} >
           <FaPencilAlt className='text-primary' style={{ cursor: 'pointer'}} />
         </Link>
       </td>
       <td>
         <FaTimes
-          onClick={(e) => handleDelete(user.userId, e)}
+          onClick={(e) => handleDelete(user.id, e)}
           style={{ cursor: 'pointer', color: 'red', marginLeft: '10px' }}
         />
       </td>

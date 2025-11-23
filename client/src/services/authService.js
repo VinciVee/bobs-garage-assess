@@ -17,7 +17,7 @@ async function login({ email, password }){
 // LOADUSER GET REQUEST
 async function loadUser() {
   const response = await api.get('/api/auth')
-  console.log(response?.data)
+  console.log('[authService] Response:', response?.data)
   return response
 }
 

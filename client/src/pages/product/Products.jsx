@@ -5,14 +5,14 @@
  */
 import SingleProduct from './SingleProduct';
 import { useSelector } from 'react-redux';
-import { selectAllProducts, getProductError, getProductMessage, getProductStatus } from '../../slices/productSlice'
+import { selectAllProducts, getProductError, getProductStatus } from '../../slices/products/productSlice'
 
 const Products = () => {
+  // Set Selectors
   const productList = useSelector(selectAllProducts)
   const productStatus = useSelector(getProductStatus)
   const error = useSelector(getProductError)
-  const message = useSelector(getProductMessage)
-  console.log('Products.jsx\n', productList )
+  console.log('Products.jsx - loading products:\n', productList )
 
   switch (productStatus) {
     case 'loading':
@@ -26,7 +26,6 @@ const Products = () => {
       return (
         <div className='text-danger'>
           <p>{error}</p>
-          <p>{message}</p>
         </div>
       )
 
@@ -36,10 +35,10 @@ const Products = () => {
           <div>
             <h2>Bob's Garage</h2>
             <div className="row">
-              {productList.map((flower) =>
+              {productList.map((service) =>
                   <SingleProduct
-                      key={flower.prodId}
-                      flower={flower}
+                      key={service.id}
+                      product={service}
                   />
               )}
             </div>

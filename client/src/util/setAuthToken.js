@@ -1,8 +1,7 @@
 /**
  * src/utils/setAuthToken.js
- * Set Token to be sent in http headers whenever an http request is sent from client-side
+ * Set Token in http headers whenever an http request is sent from client-side
  */
-
 import api from "../services/api"
 
 const setAuthToken = (token) => {

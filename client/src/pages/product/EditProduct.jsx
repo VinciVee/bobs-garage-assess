@@ -6,27 +6,27 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProductStatus, selectById, updateProduct } from '../../slices/productSlice';
+import { getProductStatus, selectProductById } from '../../slices/products/productSlice'
+import { updateProduct } from '../../slices/products/productThunks';
 
 const EditProduct = () => {
   // Hooks
-  let {id} = useParams() // Get id from URL
-  id = Number(id)
+  let productId = Number(useParams()) // Get id from URL
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const product = useSelector((state) => selectById(state, id))
+  const product = useSelector((state) => selectProductById(state, productId))
   const status = useSelector(getProductStatus)
 
   // States
   const [ formData, setFormData] = useState({
     // Original product details
-    prodId: product.prodId,
+    id: product.id,
     name: product.name,
     desc: product.desc,
     image: product.image,
     price: product.price
   })
-  const { prodId, name, desc, image, price} = formData;
+  const { id, name, desc, image, price} = formData;
 
   if(!product){
     return (
@@ -53,7 +53,7 @@ const EditProduct = () => {
 
     // Object for updated flower
     const updFlower = {
-      prodId,
+      id,
       name,
       desc,
       image,
@@ -62,7 +62,7 @@ const EditProduct = () => {
     console.log('UPDFLOWER: ', updFlower)
 
     try {
-      dispatch(updateProduct({ id: prodId, data: updFlower})).unwrap()
+      dispatch(updateProduct({ id: id, data: updFlower})).unwrap()
     } catch (err) {
       console.log('Failed to update product', err)
     }

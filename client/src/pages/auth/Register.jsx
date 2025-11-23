@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { Link, Navigate, useNavigate } from "react-router"
 import { useDispatch, useSelector } from "react-redux"
-import { register, getIsAuth } from "../../slices/authSlice"
+import { getIsAuth } from "../../slices/auth/authSlice"
+import { register } from "../../slices/auth/authThunks"
 import { is_Empty } from "../../util/validation"
 
 // React tools
@@ -34,13 +35,14 @@ function Register() {
     return <Navigate to='/' />
   }
 
-
   const { firstName, lastName, email, image, password, passwordCompare,  errors } = formData
 
   const handleChange = (e) => setFormData({
     ...formData,
     [e.target.name]: e.target.value // form input name and value
   })
+
+  // const canSave = (firstName !== '' && email != '' && email !== '') && registerStatus === 'idle'
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -86,8 +88,9 @@ function Register() {
       dispatch(register({ firstName, lastName, email, image, password })).unwrap()
       navigate('/')
     } catch (error) {
-      console.log('Error: ', error)
+      console.log('Error: ', error.message)
       setTimeout(() => {setLoading(false), 1000})
+      return
     } finally {
       setRegisterStatus('idle')
     }

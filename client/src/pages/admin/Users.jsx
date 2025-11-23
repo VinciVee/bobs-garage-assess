@@ -1,7 +1,7 @@
 // import useSelector
 import { useSelector } from "react-redux"
 // import selectAllUsers
-import { selectAllUsers } from '../../slices/userSlice'
+import { selectAllUsers } from '../../slices/users/userSlice'
 import SingleUser from './SingleUser'
 
 function Users() {
@@ -27,7 +27,7 @@ function Users() {
           <tbody className="table=group-divider">
             {
               userList.map((user) => (
-                <SingleUser key={user.userId} user={user} />
+                <SingleUser key={user.id} user={user} />
               ))
             }
           </tbody>
