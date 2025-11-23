@@ -1,19 +1,24 @@
-const express = require('express')
-const router = express.Router()
+// Routes for users
 
+// Built-in & external modules
+const express = require('express')
+const usersLog = require('debug')('app:users')
+// Database models
 const db = require('../models')
 const { User } = db.sequelize.models
+// Middleware
 const auth = require('../middleware/auth')
 const admin = require('../middleware/admin')
+// Utilities & Services
 const ApiError = require('../utilities/ApiError')
 const { hashPassword } = require('../utilities/authServices')
+// Router setup
+const router = express.Router()
 
 module.exports = () => {
-  // GET ALL USERS
-  // GET Request
+  // GET /api/users/ - get all users
   router.get('/', async(req,res,next) => {
-    console.log('/api/users - GET')
-
+    usersLog(`[${req.method}] ${req.url}`)
     try {
       const options = {
         attributes: { exclude: ['password']}
@@ -31,10 +36,9 @@ module.exports = () => {
   //   console.log('/api/users/:id')
   // })
 
-  // ADD A NEW USER
-  // POST Request
+  // POST /api/users/add - add a new user
   router.post('/add', [auth, admin], async(req,res,next) => {
-    console.log('/api/users/add - POST. REQ BODY:', req.body)
+    usersLog(`[${req.method}] ${req.url}`)
     const { firstName, lastName, email, image, password, isAdmin } = req.body
 
     try {
@@ -50,7 +54,7 @@ module.exports = () => {
         password: await hashPassword(password),
         isAdmin
       })
-      console.log(user.toJSON())
+      usersLog('Added User:\n', user.toJSON())
       res.send(user)
     } catch (error) {
       return next(ApiError.internal('The item selected could not be added', error))
@@ -58,11 +62,9 @@ module.exports = () => {
   })
 
 
-  // EDIT A USER BY ID
-  // PUT Request
+  // PUT /api/users/edit/:id - edit a user
   router.put('/edit/:id', [auth, admin], async(req,res,next) => {
-    console.log('/api/users/edit/:id - PUT')
-    // console.log(req.body)
+    usersLog(`[${req.method}] ${req.url}`)
     try {
       const id = Number(req.params.id)
       if(!id) {
@@ -77,28 +79,27 @@ module.exports = () => {
         image,
         password: await hashPassword(password),
         isAdmin
-      }, { where: { userId : id }})
+      }, { where: { id : id }})
 
-      console.log('User details updated:\n', user.toJSON())
-      // send response to the client
+      usersLog('User details updated:\n', user.toJSON())
       res.send(user)
+
     } catch (error) {
       return next(ApiError.internal('The item selected could not be updated', error))
     }
   })
 
 
-  // DELETE USER BY ID
-  // DELETE Request
+  // DELETE /api/users/delete/:id - delete user
   router.delete('/delete/:id', [auth, admin], async(req,res,next) => {
-    console.log('/api/users/delete/:id - DELETE')
+    usersLog(`[${req.method}] ${req.url}`)
     try {
       const id = Number(req.params.id)
 
       if(!id) {
         return next(ApiError.badRequest('User could not be found'))
       }
-      User.destroy({ where: { userId : id }})
+      User.destroy({ where: { id : id }})
       res.send(`User ${id} deleted`)
     } catch (error) {
       return next(ApiError.internal('The item selected could not be deleted', error))

@@ -1,9 +1,6 @@
 // SETTING UP A WHITELIST
 const config = require("./config")
-// CORS: https://www.npmjs.com/package/cors
-
 const whitelist = config.corsAllowedOptions
-console.log(whitelist)
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -12,8 +9,7 @@ const corsOptions = {
     } else {
       console.log("Incoming origin:", origin)
       callback(new Error('Not allowed by CORS'))
-    }
-  },
+  }},
   optionsSuccessStatus: 200
 }
 

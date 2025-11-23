@@ -1,10 +1,12 @@
-const config = require('../config/config')
-const db = require('../models')
-const { User } = db.sequelize.models
-
+// Modules
 const bcrypt = require('bcrypt')
 const _ = require('lodash')
 const jwt = require('jsonwebtoken')
+// Database Models
+const db = require('../models')
+const { User } = db.sequelize.models
+// Config
+const config = require('../config/config')
 
 module.exports = {
   // FIND EMAIL IN USER LIST
@@ -38,7 +40,7 @@ module.exports = {
   jwtSignUser(user){
     const payload = {
       user: {
-        userId: user.userId,
+        id: user.id,
         firstName: user.firstName,
         email: user.email,
         isAdmin: user.isAdmin
@@ -55,8 +57,7 @@ module.exports = {
   // COMPARE PASSWORD
   async comparePassword(dbPassword, password){
     const passwordMatch = await bcrypt.compare(
-      password, dbPassword
-    )
+      password, dbPassword )
     return passwordMatch
   },
 }

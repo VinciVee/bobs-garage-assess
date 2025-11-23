@@ -1,61 +1,53 @@
-/**
- * Name:
- * Author:
- * Version:
- * Purpose:
- *
- */
-// Import Packages
+// Built-in & external modules
 const express = require('express');
-require('dotenv').config()
-const db = require('./models')
 const helmet = require('helmet')
 const cors = require('cors')
-const corsOptions = require('./config/corsOptions')
-
-// Import config & routes
-const config = require('./config/config')
+require('dotenv').config()
+const startlog = require('debug')('app:startup')
+// Database
+const db = require('./models')
+// Middleware
 const apiErrorHandler = require('./middleware/apiErrorHandler')
-const ApiError = require('./utilities/ApiError')
-const routes = require('./routes/routes')
-
-// Custom debug logs & middleware
 const auth = require('./middleware/auth')
 const admin = require('./middleware/admin')
-const startlog = require('debug')('app:startup')
-
-// Initiailise express app variable
+// Utilities
+const ApiError = require('./utilities/ApiError')
+// Core app setup
+const routes = require('./routes/routes')
+const config = require('./config/config')
+const corsOptions = require('./config/corsOptions')
 const app = express();
 
 // ---------- MIDDLEWARE ----------
 app.use(helmet())
 app.use(cors(corsOptions))
+// Setting up uploads folder to serve static assets
+app.use('./uploads', express.static('uploads'))
 
 // Default middleware for parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Express endpoints
-startlog('Accessing endpoints under /api ...')
 app.use('/api', routes())
 
 // ERROR HANDLERS: 404 NOT FOUND
 app.use((req, res, next) => {
-  // const err = new Error('404 - Resource Not Found')
-  // err.status = 404
-  // res.status(err.status).send(err)
   next(ApiError.notFound())
 })
 
 // ERROR HANDLER: 400s & 500s ("everything else")
 app.use(apiErrorHandler)
 
-/*
-  APP.LISTEN
-  Purpose: will check if the tables exist - if they do not exist, then it will create them
-*/
-db.sequelize.sync().then(() => {
-  app.listen(config.port,
-    () => console.log(`Server is running on port: ${config.port}`)
-  )
+db.sequelize.authenticate()
+  // Check DB connection
+  .then(() => {
+    startlog('Database connection succesful')
+    return db.sequelize.sync()
+})// Start server
+  .then(() => {
+    app.listen(config.port, () => startlog(`Port: ${config.port}`))
+})// Error
+  .catch((err) => {
+    console.error('Unable to connect or sync to database: ', err)
 })

@@ -1,16 +1,12 @@
-/**
- * src/models/index.js
- * This file will hold our database information and Models
- *
- */
+// DATABASE
 // Import Sequelize - ORM package
 const { Sequelize, DataTypes } = require('sequelize')
 const config = require('../config/config')
 
-// Create a variable to hold our db information
+// Variable to hold our db information
 let db = {}
 
-// Create a new sequelize object
+// New sequelize object
 const sequelize = new Sequelize(
   config.db.database,
   config.db.user,
@@ -20,8 +16,7 @@ const sequelize = new Sequelize(
 
 // MODELS
 const Product = sequelize.define('Product',
-  {
-    prodId:{
+  { id:{
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true
@@ -30,12 +25,10 @@ const Product = sequelize.define('Product',
     desc: { type: DataTypes.TEXT('long') },
     image: { type: DataTypes.STRING },
     price: { type: DataTypes.DECIMAL(8,2), allowNull: false }
-  }
-)
+})
 
 const User = sequelize.define('User',
-  {
-    userId:{
+  { id:{
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true
@@ -46,8 +39,7 @@ const User = sequelize.define('User',
     image: { type: DataTypes.STRING },
     password: { type: DataTypes.STRING, allowNull: false },
     isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false }
-  }
-)
+})
 
 // SEQUELIZE VARIABLES
 // Sequalize refers to library itself - gives access to class and methods

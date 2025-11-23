@@ -1,8 +1,4 @@
-/**
- * src/config/config.js
- *
- *
- */
+// Configs
 module.exports = {
   port: process.env.PORT,
   db: {
@@ -13,6 +9,7 @@ module.exports = {
       dialect: process.env.DIALECT,
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
+      logging: false,
     }
   },
   authentication: {
