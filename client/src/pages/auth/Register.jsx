@@ -1,19 +1,14 @@
 import { useState } from "react"
-import { Link, Navigate, useNavigate } from "react-router"
+import { Navigate, useNavigate } from "react-router"
 import { useDispatch, useSelector } from "react-redux"
 import { getIsAuth } from "../../slices/auth/authSlice"
 import { register } from "../../slices/auth/authThunks"
 import { is_Empty } from "../../util/validation"
-
 // React tools
-import { FloatingLabel, Form, Button } from "react-bootstrap"
-import Spinner from "react-bootstrap/Spinner"
 import { toast } from 'react-toastify'
-
 // Local Modules
 import * as styles from './Register.css'
-import AuthForm from '../../components/common/AuthForm'
-import CustomButton from "../../components/common/CustomButton"
+import RegisterForm from "../../components/features/forms/RegisterForm"
 
 function Register() {
   const navigate = useNavigate()
@@ -97,105 +92,12 @@ function Register() {
   }
 
   return (
-    <AuthForm title="Register" authform>
-      <Form onSubmit={handleSubmit}>
-        {/* FIRSTNAME */}
-        <FloatingLabel
-          controlId="firstName"
-          label="First name*"
-          className="mb-3" >
-            <Form.Control
-              type="text"
-              className={`form-control ${errors.firstName ? "is-invalid": "is-valid"}`}
-              placeholder="First name"
-              name="firstName"
-              onChange={handleChange}
-              value={firstName} />
-        </FloatingLabel>
-        { errors.firstName && <div className='invalid-feedback'>
-          { errors.firstName}
-          </div>}
-
-        {/* LASTNAME */}
-        <FloatingLabel
-          controlId="lastName"
-          label="Last name*"
-          className="mb-3" >
-            <Form.Control
-              type="text"
-              className={`form-control ${errors.lastName ? "is-invalid": "is-valid"}`}
-              placeholder="Last name"
-              name="lastName"
-              onChange={handleChange}
-              value={lastName} />
-        </FloatingLabel>
-        { errors.lastName && <div className='invalid-feedback'>
-          { errors.lastName}
-          </div>}
-
-        {/* EMAIL */}
-        <FloatingLabel
-          controlId="email"
-          label="Email address*"
-          className="mb-3" >
-            <Form.Control
-              type="email"
-              className={`form-control ${errors.email ? "is-invalid": "is-valid"}`}
-              placeholder="name@example.com"
-              name="email"
-              onChange={handleChange}
-              value={email} />
-        </FloatingLabel>
-        { errors.email && <div className='invalid-feedback'>
-          { errors.email}
-          </div>}
-
-        {/* PASSWORD */}
-        <FloatingLabel
-          controlId="password"
-          label="Password*"
-          className="mb-3" >
-            <Form.Control
-              type="password"
-              className={`form-control ${errors.password ? "is-invalid": "is-valid"}`}
-              placeholder="Password"
-              name="password"
-              onChange={handleChange}
-              value={password} />
-        </FloatingLabel>
-        { errors.password && <div className='invalid-feedback'>
-          { errors.password}
-          </div>}
-
-        {/* PASSWORD CONFIRMATION */}
-        <FloatingLabel
-          controlId="password-confirm"
-          label="Password Confirmation*"
-          className="mb-3">
-            <Form.Control
-              type="password"
-              name="passwordCompare"
-              onChange={handleChange}
-              value={passwordCompare}
-              className={`form-control ${errors.passwordCompare ? "is-invalid": "is-valid"}`}
-              placeholder="Password Confirmation"
-            />
-        </FloatingLabel>
-        { errors.passwordCompare && <div className='invalid-feedback'>
-          { errors.passwordCompare}
-          </div>}
-
-        {/* SUBMIT BUTTON */}
-        <CustomButton loadingState={loading}>
-          {loading ? <Spinner animation="border" variant="light" /> : 'Submit'}
-        </CustomButton>
-      </Form>
-      <div className={styles.userNav}>
-        <span>Already a member? &nbsp;
-          <Link to="/login">Login Here</Link>
-        </span>
-      </div>
-    </AuthForm>
+    <RegisterForm
+      formData={formData}
+      handleSubmit={handleSubmit}
+      handleChange={handleChange}
+      loading={loading}
+    />
   )
 }
 

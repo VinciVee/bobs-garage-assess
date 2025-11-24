@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import { Button } from 'react-bootstrap'
-import * as styles from './CustomButton.css'
+import * as styles from './BgButton.css'
 
-const CustomButton = ({ children, loadingState, onClick, outline, navbar }) => {
+const BgButton = ({ children, loadingState, onClick, outline, navbar }) => {
   return (
     <Button
       className={styles.button}
@@ -17,7 +17,7 @@ const CustomButton = ({ children, loadingState, onClick, outline, navbar }) => {
   )
 }
 
-CustomButton.propTypes = {
+BgButton.propTypes = {
   children: PropTypes.any,
   loadingState: PropTypes.bool,
   outline: PropTypes.bool,
@@ -25,5 +25,5 @@ CustomButton.propTypes = {
   type: PropTypes.string,
 }
 
-export default CustomButton
+export default BgButton
 

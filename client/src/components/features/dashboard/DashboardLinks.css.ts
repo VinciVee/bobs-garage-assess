@@ -1,6 +1,6 @@
 //
 import { style } from "@vanilla-extract/css"
-import { vars } from "../../styles/themes.css"
+import { vars } from "../../../styles/themes.css"
 
 export const dashboardLink = style({
   textDecoration: "none",

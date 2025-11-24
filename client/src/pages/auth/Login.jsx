@@ -1,17 +1,11 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import { useDispatch } from 'react-redux'
 import { login } from '../../slices/auth/authThunks'
 import { is_Empty } from '../../util/validation'
-
-// React tools
-import Spinner from "react-bootstrap/Spinner"
-import { FloatingLabel, Form, Button, FormControl } from "react-bootstrap"
-
 // Local Modules
 import * as styles from './Login.css'
-import AuthForm from '../../components/common/AuthForm'
-import CustomButton from '../../components/common/CustomButton'
+import LoginForm from '../../components/features/forms/LoginForm'
 
 function Login() {
   const navigate = useNavigate()
@@ -23,7 +17,7 @@ function Login() {
     errors: {}
   })
 
-  const { email, password, errors } = formData
+  const { email, password } = formData
 
   const handleChange = (e) => setFormData({
     ...formData,
@@ -56,57 +50,12 @@ function Login() {
   }
 
   return (
-    <AuthForm title="Log in" authform>
-      <Form onSubmit={handleSubmit}>
-        {/* EMAIL */}
-        <FloatingLabel
-          controlId="email"
-          label="Email address*"
-          className="mb-3" >
-            <Form.Control
-              type="email"
-              // className={`form-control ${errors.email ? "is-invalid": "is-valid"}`}
-              isInvalid={!!errors.email}
-              placeholder="name@example.com"
-              name="email"
-              onChange={handleChange}
-              value={email} />
-            <Form.Control.Feedback type="invalid">
-              { errors.email }
-            </Form.Control.Feedback>
-        </FloatingLabel>
-        {/* { errors.email && <div className='invalid-feedback'>
-          { errors.email }
-          </div> } */}
-
-        {/* PASSWORD */}
-        <FloatingLabel
-          controlId="password"
-          label="Password*"
-          className="mb-3" >
-            <Form.Control
-              type="password"
-              className={`form-control ${errors.password ? "is-invalid": "is-valid"}`}
-              placeholder="Password"
-              name="password"
-              onChange={handleChange}
-              value={password} />
-        </FloatingLabel>
-        { errors.password && <div className='invalid-feedback'>
-          { errors.password}
-          </div>}
-
-        {/* SUBMIT BUTTON */}
-        <CustomButton loadingState={loading}>
-          {loading ? <Spinner animation="border" variant="light" /> : 'Submit'}
-        </CustomButton>
-      </Form>
-      <div className={styles.userNav}>
-        <span>Not a member? &nbsp;
-          <Link to="/register">Sign Up Here</Link>
-        </span>
-      </div>
-    </AuthForm>
+    <LoginForm
+      formData={formData}
+      handleSubmit={handleSubmit}
+      handleChange={handleChange}
+      loading={loading}
+    />
   )
 }
 

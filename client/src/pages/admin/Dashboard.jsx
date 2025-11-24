@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 import { getIsAdmin, getIsAuth } from '../../slices/auth/authSlice.js'
 
-import DashboardLinks from './DashboardLinks.jsx'
+import DashboardLinks from '../../components/features/dashboard/DashboardLinks.jsx'
 
 function Dashboard() {
   // Set up the selectors
@@ -15,10 +15,6 @@ function Dashboard() {
   if (!isAdmin && !isAuth ) {
     return <Navigate to='/login' />
   }
-
-  // Set up the dashboard
-  // left side - navigation links / actions
-  // right side will render the child components
 
   return (
     <main className='row'>

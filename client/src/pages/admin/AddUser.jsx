@@ -8,8 +8,8 @@ import Spinner from "react-bootstrap/Spinner"
 import { addUser } from '../../slices/users/userThunks'
 // local components & utilities
 import { is_Empty } from '../../util/validation'
-import AuthForm from '../../components/common/AuthForm'
-import CustomButton from "../../components/common/CustomButton"
+import BgCard from '../../components/common/BgCard'
+import BgButton from "../../components/common/BgButton"
 
 function AddUser() {
   const [loading, setLoading ] = useState(false)
@@ -42,7 +42,7 @@ function AddUser() {
   try {
     console.log('Saving new user...')
     setRegisterStatus('pending')
-    dispatch(addNewUser({ firstName, lastName, email, image, password })).unwrap()
+    dispatch(addUser({ firstName, lastName, email, image, password })).unwrap()
   } catch (error) {
     console.log('Error: ', error.message)
     return
@@ -51,7 +51,7 @@ function AddUser() {
   }
 
   return (
-    <AuthForm title="Add in new user" authform>
+    <BgCard title="Add in new user" authform>
       <Form onSubmit={handleSubmit}>
         {/* FIRSTNAME */}
         <FloatingLabel
@@ -140,11 +140,11 @@ function AddUser() {
           </div>}
 
         {/* SUBMIT BUTTON */}
-        <CustomButton loadingState={loading}>
+        <BgButton loadingState={loading}>
           {loading ? <Spinner animation="border" variant="light" /> : 'Submit'}
-        </CustomButton>
+        </BgButton>
       </Form>
-    </AuthForm>
+    </BgCard>
   )
 }
 

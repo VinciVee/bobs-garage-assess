@@ -2,12 +2,7 @@
 import { FaTimes, FaPencilAlt } from 'react-icons/fa'
 import { Link } from 'react-router'
 
-function SingleUser({ user }) {
-
-  const handleDelete = (id) => {
-    console.log('Delete user clicked')
-    console.log(`Id clicked is: ${id}`)
-  }
+function UserItem({user, handleDelete}) {
 
   return (
     <tr>
@@ -18,7 +13,7 @@ function SingleUser({ user }) {
       <td>{user.isAdmin ? 'Yes' : 'No'}</td>
       <td>{user.image}</td>
       <td>
-        <Link to={`/admin/users.edit/${user.id}`} >
+        <Link to={`/admin/users-edit/${user.id}`} >
           <FaPencilAlt className='text-primary' style={{ cursor: 'pointer'}} />
         </Link>
       </td>
@@ -33,4 +28,4 @@ function SingleUser({ user }) {
   )
 }
 
-export default SingleUser
+export default UserItem

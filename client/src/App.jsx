@@ -6,16 +6,18 @@ import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import Home from "./pages/Home";
 import About from "./pages/About";
+import NotFound from './pages/NotFound'
+// Products Routes
 import Products from "./pages/product/Products";
 import AddProduct from './pages/product/AddProduct';
 import EditProduct from './pages/product/EditProduct';
-import NotFound from './pages/NotFound'
+// Auth Routes
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register'
-// Admin routes
+// Admin Routes
 import Dashboard from './pages/admin/Dashboard';
 import Users from './pages/admin/Users';
-import SingleUser from './pages/admin/SingleUser';
+import User from './pages/admin/User';
 import AddUser from './pages/admin/AddUser';
 import EditUser from './pages/admin/EditUser';
 import UploadImage from './pages/admin/UploadImage';
@@ -43,9 +45,9 @@ function App() {
           {/* Admin */}
           <Route path='admin' element={<Dashboard />}>
             <Route path='users' element={<Users />} />
-            <Route path='single-user' element={<SingleUser />} />
+            <Route path='users/:id' element={<User />} />
             <Route path='users-add' element={<AddUser />} />
-            <Route path='users/edit/:id' element={<EditUser />} />
+            <Route path='users-edit/:id' element={<EditUser />} />
             <Route path='images-new' element={<UploadImage />} />
             <Route path='images-change' element={<ChangeImage />} />
           </Route>

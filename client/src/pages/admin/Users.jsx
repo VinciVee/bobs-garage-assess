@@ -1,39 +1,52 @@
-// import useSelector
-import { useSelector } from "react-redux"
-// import selectAllUsers
-import { selectAllUsers } from '../../slices/users/userSlice'
-import SingleUser from './SingleUser'
+// Users page
+// Handles loading, failed and succeeded states
+// Calls UsersList component
+
+import UsersList from '../../components/features/users/UsersList'
+import { useSelector } from 'react-redux'
+import { getUserError, getUserStatus } from '../../slices/users/userSlice'
 
 function Users() {
-  // Using the selector
-  const userList = useSelector(selectAllUsers)
+  const status = useSelector(getUserStatus)
+  const error = useSelector(getUserError)
+  console.log('Users.jsx - loading users')
+
+  let content;
+
+  switch (status) {
+    case 'loading':
+      console.log('Loading users...')
+      content = ( <p>Loading...</p> )
+      break
+
+    case 'failed':
+      console.log('Error: failed to load users...')
+      content = (
+        <div className='text-danger'>
+          <p>{error}</p>
+        </div>
+      )
+      break
+
+    case 'succeeded':
+      content = (
+        <div>
+          <UsersList />
+        </div>
+      )
+      break
+
+    default:
+      console.log('Default case for usersList status - Users.jsx')
+  }
+
   return (
-    <div className="m-3">
-      <div className="card card-body mb-3 table-responsive">
-        <h2 className="text-primary">User Table</h2>
-        <table className="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">First Name</th>
-              <th scope="col">Last Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Admin</th>
-              <th scope="col">Image</th>
-              <th scope="col">Edit</th>
-              <th scope="col">Delete</th>
-            </tr>
-          </thead>
-          <tbody className="table=group-divider">
-            {
-              userList.map((user) => (
-                <SingleUser key={user.id} user={user} />
-              ))
-            }
-          </tbody>
-        </table>
+    <>
+      <h2>Users List</h2>
+      <div className="row">
+        { content }
       </div>
-    </div>
+    </>
   )
 }
 

@@ -1,6 +1,6 @@
-import * as styles from './AuthForm.css'
+import * as styles from './BgCard.css'
 
-const AuthForm = ({ title, authform, children }) => {
+const BgCard = ({ title, authform, children }) => {
   return (
     <div className={styles.container}>
       <div className={`${styles.leadCard} ${authform ? styles.authForm : styles.generalForm}`}>
@@ -11,4 +11,4 @@ const AuthForm = ({ title, authform, children }) => {
   )
 }
 
-export default AuthForm
+export default BgCard
