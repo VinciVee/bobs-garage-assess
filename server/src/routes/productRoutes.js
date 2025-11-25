@@ -121,8 +121,8 @@ module.exports = () => {
   // GET /api/products/sort/:field/:direction
   router.get('/sort/:field/:direction', async(req,res,next) => {
     productsLog(`[${req.method}] ${req.url}`)
-    const field = req.params.field
-    const direction = req.params.direction
+    const field = req.params.field  // Table columns
+    const direction = req.params.direction // ASC or DESC
 
     try {
       // Get all products in order

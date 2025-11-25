@@ -1,11 +1,12 @@
-// Routes for admin dashboard
+/**
+ * Routes for admin dashboard
+ */
 
 // Built-in & external modules
 const express = require('express')
 const adminLog = require('debug')('app:admin') // replaces console.log
 const fs = require('fs')
 const multer = require('multer')
-// Database models
 // Middleware
 const auth = require('../middleware/auth')
 const admin = require('../middleware/admin')
@@ -37,6 +38,14 @@ module.exports = () => {
     try {
       adminLog(`[${req.method}] ${req.url}`)
 
+      if (!req.file) return next(ApiError.badRequest('No file uploaded'))
+
+      // Return info about the uploaded file
+      res.json({
+        message: 'File uploaded successfully',
+        filename: req.file.filename,
+        path: req.file.path
+      })
     } catch (error) {
       return next(ApiError.internal('Image could not be uploaded ...', error))
     }
@@ -49,7 +58,8 @@ module.exports = () => {
       adminLog(`[${req.method}] ${req.url}`)
 
       const image = req.params.filename
-      const url = `URL/${image}`
+      const url = `http://localhost:3001/uploads/${image}`
+      adminLog('image url: ', url)
 
       res.status(200).send(url)
 
@@ -61,14 +71,13 @@ module.exports = () => {
 
   // GET IMAGE LIST
   // GET /api/admin/getImageList
-  router.get('/getImageList', () => {
+  router.get('/getImageList', (req,res,next) => {
     adminLog(`[${req.method}] ${req.url}`)
 
     const path = './uploads'
     try {
       fs.readdir(path, (err, files) => {
         if(err) return next(ApiError.badRequest('An error occured while retrieving the image(s).'))
-
         adminLog('Files:\n', files)
         res.status(200).send(files)
       })

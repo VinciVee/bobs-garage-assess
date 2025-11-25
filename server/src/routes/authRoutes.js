@@ -35,8 +35,8 @@ module.exports = () => {
       const userRes = await User.create(newUser)
 
       if (userRes === null) return next(ApiError.badRequest('An error occured while registering this user.'))
-
-      res.send({ token: jwtSignUser(user) })
+      // Login new user
+      res.send({ token: jwtSignUser(userRes.toJSON()) })
     } catch(error) {
       return next(ApiError.internal('Your profile could not be registered at this time ...', error))
   }})
@@ -74,7 +74,7 @@ module.exports = () => {
     try {
       // Find logged-in user and return details w/out password
       const user = await User.findByPk(req.user.id, options)
-      authLog('Logged-in user:\n', user)
+      authLog('[loaduser] Returning found user...')
       res.json(user)
 
     } catch (error) {
