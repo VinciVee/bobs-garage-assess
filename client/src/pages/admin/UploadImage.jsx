@@ -7,21 +7,22 @@ function UploadImage() {
 
   const handleChange = (e) => {
     const selectedFile = e.target.files[0]
-    console.log('', selectedFile)
+    console.log('Selected file:', selectedFile)
     setFile(selectedFile)
     setMsg('')
   }
 
-  const handleUpload = async (e) => {
+  const handleUpload = (e) => {
     e.preventDefault()
 
     const formData = new FormData()
-    formData.append('name', file.className)
     formData.append('file', file)
+    // const url = 'http://localhost:3001/api/admin/uploadImage'
+    // formData.append('name', file.className)
 
     try {
-      const res = await adminService.uploadImage((formData))
-      setMsg(res.data.message || 'Image uploaded successfully')
+      const res = adminService.uploadImage((formData))
+      setMsg(res.message || 'Image uploaded successfully')
     } catch (error) {
       setMsg('Upload image failed: ')
       console.log('Upload image failed: ', error.message)
@@ -44,12 +45,16 @@ function UploadImage() {
                 type='file'
                 className='form-control'
                 id='file'
-                onChange={(e) => handleChange(e)}
+                onChange={handleChange}
               />
               {msg && <p>{msg}</p>}
             </div>
             <div className='d-grid gap-2'>
-              <input type='submit' value='Upload Image' className='btn btn-info text-white'/>
+              <input
+                type='submit'
+                value='Upload Image'
+                className='btn btn-info text-white'
+              />
             </div>
           </form>
         </div>

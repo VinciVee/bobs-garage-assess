@@ -25,8 +25,7 @@ export const filterList = (list, id) => {
 
 export const updateList = (list, updatedItem) => {
   const updatedList = list.map((item) => {
-    item.id === updatedItem.id ?
-    (item === updatedItem) : item
+    item.id === updatedItem.id ? (item === updatedItem) : item
    })
 
    return updatedList

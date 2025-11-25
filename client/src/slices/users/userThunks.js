@@ -49,10 +49,10 @@ export const addUser = createAsyncThunk(
 // UPDATE USER Request
 export const updateUser = createAsyncThunk(
   'users/updateUser',
-  async ({id, updatedUser}, thunkAPI) => {
+  async ({id, data}, thunkAPI) => {
     try {
       console.log('Updating user: ', id)
-      const response = await userService.updateUser(id, updatedUser)
+      const response = await userService.updateUser(id, data)
 
       console.log('response:\n', response.data)
       return response.data

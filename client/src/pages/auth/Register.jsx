@@ -47,21 +47,25 @@ function Register() {
     // First name
     if(is_Empty(firstName)) {
       setFormData({ ...formData, errors: { firstName: 'First name is required '}})
+      setLoading(false)
       return
     }
     // Last name
     if(is_Empty(lastName)) {
       setFormData({ ...formData, errors: { lastName: 'Last name is required '}})
+      setLoading(false)
       return
     }
     // Email
     if(is_Empty(email)) {
       setFormData({ ...formData, errors: { email: 'email is required '}})
+      setLoading(false)
       return
     }
     // Password
     if(is_Empty(password)) {
       setFormData({ ...formData, errors: { password: 'password is required '}})
+      setLoading(false)
       return
     }
     // Password Comparisation
@@ -81,12 +85,11 @@ function Register() {
     try {
       // setRegisterStatus('pending')
       dispatch(register({ firstName, lastName, email, image, password })).unwrap()
-      navigate('/')
+      setTimeout(() => {navigate('/'), 1000})
     } catch (error) {
       console.log('Error: ', error.message)
-      setTimeout(() => {setLoading(false), 1000})
-      return
     } finally {
+      setTimeout(() => {setLoading(false), 1000})
       setRegisterStatus('idle')
     }
   }

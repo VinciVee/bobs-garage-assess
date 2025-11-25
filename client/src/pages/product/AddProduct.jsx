@@ -1,14 +1,22 @@
 /**
  * AddProduct.jsx
  *
- *
  */
+// React hooks
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+// Redux modules
 import { addProduct } from "../../slices/products/productThunks";
+// Local modules, components
 import { alpha, is_Empty, isValidPrice} from "../../util/validation"
+import BgCard from "../../components/common/BgCard";
+import ProductForm from "../../components/features/forms/ProductForm";
 
 const AddProduct = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const [loading, setLoading ] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     desc: '',
@@ -17,21 +25,18 @@ const AddProduct = () => {
     errors: {},
   });
 
-  const dispatch = useDispatch()
 
   const { name, desc, image, price, errors} = formData
 
-  const onChange = e => {
-    // e.target.name - inputbox we are typing in.
-    // e.target.value - the text we have typed in the inputbox.
+  const handleChange = e => {
     setFormData({
       ...formData, [e.target.name]: e.target.value
     })
   }
 
-  const onSubmit = e => {
-    // Prevent submit button default behavior - refreshes the page
+  const handleSubmit = (e) => {
     e.preventDefault()
+    setLoading(true)
     console.log('onSubmit (AddProducts) running...');
 
     // CLIENT-SIDE VALIDATION --------
@@ -124,77 +129,29 @@ const AddProduct = () => {
       image: defaultImage,
       price
     }
-    console.log(newProduct);
-    dispatch( addProduct(newProduct))
-    // Can redirect to home page here...
+
+    try {
+      dispatch( addProduct(newProduct)).unwrap()
+    } catch (error) {
+      console.log('Failed to add service', error)
+    } finally {
+      setTimeout(() => {setLoading(false), 1000})
+      navigate('/products')
+    }
   };
 
   return (
    <>
-    <h1 className="text-primary">Add New Product</h1>
+    <h1 className="text-primary">Add a New Service</h1>
     <div className="card mb-3">
-      <div className="card-header bg-body-secondary">
-        Add the new flower below:
-      </div>
-      <div className="card-body">
-        <form onSubmit={e => onSubmit(e)}>
-          <div className="mb-3">
-            <label htmlFor="name">Flower name:</label>
-            <input
-              className={`form-control ${errors.name ? "is-invalid" : "is-valid"}`}
-              type="text"
-              id="name"
-              name="name"
-              placeholder="The new flower name"
-              value={name}
-              onChange={e => onChange(e)}
-            />
-            { errors.name && <div className="invalid-feedback fs-3">
-                {errors.name}
-              </div>
-            }
-          </div>
-          <div className="mb-3">
-            <label htmlFor="desc">Flower description:</label>
-            <input
-              className="form-control"
-              type="text"
-              id="desc"
-              name="desc"
-              placeholder="The flower description"
-              value={desc}
-              onChange={e => onChange(e)}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="image">Flower image URL:</label>
-            <input
-              className="form-control"
-              type="text"
-              id="image"
-              name="image"
-              placeholder="https://myflower.net.url"
-              value={image}
-              onChange={e => onChange(e)}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="price">Flower price:</label>
-            <input
-              className="form-control"
-              type="text"
-              id="price"
-              name="price"
-              placeholder="0.00"
-              value={price}
-              onChange={e => onChange(e)}
-            />
-          </div>
-          <div className="d-grid gap2-2">
-            <input type="submit" value="Add Flower" className="btn btn-info text-white" />
-          </div>
-        </form>
-      </div>
+      <BgCard title="Add the new Service's details">
+        <ProductForm
+          formData={formData}
+          handleSubmit={handleSubmit}
+          handleChange={handleChange}
+          loading={loading}
+        />
+      </BgCard>
     </div>
    </>
   )

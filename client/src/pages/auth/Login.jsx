@@ -32,19 +32,22 @@ function Login() {
     // Email
     if(is_Empty(email)) {
       setFormData({ ...formData, errors: { email: 'email is required '}})
+      setLoading(false)
       return
     }
     // Password
     if(is_Empty(password)) {
       setFormData({ ...formData, errors: { password: 'password is required '}})
+      setLoading(false)
       return
     }
 
     try {
       dispatch(login({ email, password }))
-      navigate('/')
+      setTimeout(() => {navigate('/'), 1000})
     } catch (error) {
       console.log('error loggin in... -handleSubmit, Login.jsx')
+    } finally {
       setTimeout(() => {setLoading(false), 1000})
     }
   }

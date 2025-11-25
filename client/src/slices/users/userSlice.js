@@ -1,5 +1,5 @@
 // Holds state, actions and reducer for users
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, createSelector } from "@reduxjs/toolkit"
 import { payloadError, handlePending, handleRejected, filterList, updateList } from "../../util/reduxHelpers"
 import { fetchUserList, addUser, updateUser, deleteUser } from "./userThunks"
 
@@ -68,7 +68,14 @@ const userSlice = createSlice({
 export const selectAllUsers = (state) => state.users.userList
 export const getUserStatus = (state) => state.users.status
 export const getUserError = (state) => state.users.error
-export const selectUserById = (state, id) => state.users.userList.find(item => item.id === id)
+export const selectUserById = (state, id) => {
+  if (!id) return undefined
+  return state.users.userList.find(item => item.id === id)
+}
+// export const selectUserById = (id) => createSelector(
+//   [(state) => state.users.userList],
+//   (userList) => userList.find(item => item.id === id)
+// )
 
 // Export the reducer
 export default userSlice.reducer

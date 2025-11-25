@@ -1,5 +1,5 @@
 // Holds state, actions and reducer for products
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createSelector } from "@reduxjs/toolkit";
 import { fetchAllProducts, fetchProduct, addProduct, updateProduct, deleteProduct } from "./productThunks";
 import { handlePending, handleRejected, payloadError, filterList, updateList } from "../../util/reduxHelpers";
 
@@ -80,7 +80,14 @@ const productSlice = createSlice({
 export const selectAllProducts = (state) => state.products.productList
 export const getProductStatus = (state) => state.products.status
 export const getProductError = (state) => state.products.errors
-export const selectProductById = (state, id) => state.products.productList.find(item => item.id === id)
+export const selectProductById = (state, id) => {
+  if (!id) return undefined;
+  return state.products.productList.find(item => item.id === id)
+}
+// export const selectProductById = (id) => createSelector(
+//   [selectAllProducts],
+//   (products) => products.find(item => item.id === id)
+// )
 
 // Export the reducer
 export default productSlice.reducer

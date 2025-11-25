@@ -3,149 +3,96 @@
  *
  *
  */
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router';
+// React Hooks
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
+// Redux modules
 import { useDispatch, useSelector } from 'react-redux';
-import { getProductStatus, selectProductById } from '../../slices/products/productSlice'
-import { updateProduct } from '../../slices/products/productThunks';
+import { selectProductById, getProductStatus } from '../../slices/products/productSlice'
+import { updateProduct, fetchProduct } from '../../slices/products/productThunks';
+// Local components
+import BgCard from '../../components/common/BgCard'
+import ProductForm from '../../components/features/forms/ProductForm';
 
 const EditProduct = () => {
-  // Hooks
-  let productId = Number(useParams()) // Get id from URL
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const product = useSelector((state) => selectProductById(state, productId))
-  const status = useSelector(getProductStatus)
-
   // States
-  const [ formData, setFormData] = useState({
+  const [loading, setLoading ] = useState(false)
+  const [formData, setFormData] = useState({
     // Original product details
-    id: product.id,
-    name: product.name,
-    desc: product.desc,
-    image: product.image,
-    price: product.price
+    name: '',
+    desc: '',
+    image: '',
+    price: '',
+    errors: {}
   })
-  const { id, name, desc, image, price} = formData;
+  // Hooks
+  const paramId = Number(useParams().id)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  // Find matching products
+  const product = useSelector((state) => selectProductById(state, paramId))
+  const status = useSelector(getProductStatus)
+  // Wait for product
+  useEffect(() => {
+    if (product) {
+      setFormData({
+        name: product.name,
+        desc: product.desc,
+        image: product.image,
+        price: product.price,
+        errors: {}
+      })
+    } else if (status === 'idle') {
+      dispatch(fetchProduct(paramId))
+    }
+  }, [product, dispatch, paramId, status])
 
-  if(!product){
-    return (
-      <section className='text-danger'>
-        <h2>Product not found!</h2>
-      </section>
-    )
-  }
-
-  console.log(`EditProject.jsx id: ${id}`)
+  const { name, desc, image, price} = formData;
   //  On Change
-  const handleTextChange = (e) => {
+  const handleChange = (e) => {
     setFormData({
       ...formData,
-      // for this to work, name of attribute (in Form) needs to be the same as name of variable in user.
       [e.target.name]: e.target.value
     })
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault() // disable default submit button behaviour
+    e.preventDefault()
+    setLoading(true)
 
     // Client-side validation - Check for errors
 
-    // Object for updated flower
-    const updFlower = {
-      id,
-      name,
-      desc,
-      image,
-      price
-    }
-    console.log('UPDFLOWER: ', updFlower)
+    // Object for updated service
+    const updService = { name, desc, image, price }
+    console.log('Updating Service: ', updService)
 
     try {
-      dispatch(updateProduct({ id: id, data: updFlower})).unwrap()
+      dispatch(updateProduct({ id: paramId, data: updService})).unwrap()
     } catch (err) {
-      console.log('Failed to update product', err)
+      console.log('Failed to update service', err)
+    } finally {
+      setTimeout(() => {setLoading(false), 1000})
+      navigate('/products')
     }
-    // redirect to the products page
-    navigate('/products')
   }
 
   // Create a form to add in new products
   // name, desc, image, price
   return (
    <>
-    <h1 className="text-primary">Edit Product</h1>
+    <h1 className="text-primary">Edit Service</h1>
     <div className="card mb-3">
-      <div className="card-header bg-body-secondary">
-        Edit the flower below:
-      </div>
-      <div className="card-body">
-        <form onSubmit={handleSubmit}>
-          {/* Name */}
-          <div className="mb-3">
-            <label htmlFor="name">Flower name:</label>
-            <input
-              className="form-control"
-              type="text"
-              id="name"
-              name="name"
-              placeholder="The new flower name"
-              value={name}
-              onChange={handleTextChange}
-            />
-          </div>
-
-          {/* Description */}
-          <div className="mb-3">
-            <label htmlFor="desc">Flower description:</label>
-            <input
-              className="form-control"
-              type="text"
-              id="desc"
-              name="desc"
-              placeholder="The flower description"
-              value={desc}
-              onChange={handleTextChange}
-            />
-          </div>
-
-          {/* Image */}
-          <div className="mb-3">
-            <label htmlFor="image">Flower image URL:</label>
-            <input
-              className="form-control"
-              type="text"
-              id="image"
-              name="image"
-              placeholder="https://myflower.net.url"
-              value={image}
-              onChange={handleTextChange}
-            />
-          </div>
-
-          {/* Price */}
-          <div className="mb-3">
-            <label htmlFor="price">Flower price:</label>
-            <input
-              className="form-control"
-              type="text"
-              id="price"
-              name="price"
-              placeholder="0.00"
-              value={price}
-              onChange={handleTextChange}
-            />
-          </div>
-
-          {/* Submit Button */}
-          <div className="d-grid gap2-2">
-            <input type="submit" value="Update Flower" className="btn btn-info text-white" />
-          </div>
-        </form>
-      </div>
+      <BgCard title="Edit the Service's details">
+        <ProductForm
+          formData={formData}
+          handleSubmit={handleSubmit}
+          handleChange={handleChange}
+          loading={loading}
+        />
+      </BgCard>
     </div>
    </>
   )
 }
 
-export default EditProduct;
+export default EditProduct

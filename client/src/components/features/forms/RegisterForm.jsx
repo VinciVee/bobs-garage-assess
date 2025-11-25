@@ -9,7 +9,7 @@ import BgCard from "../../common/BgCard";
 import * as styles from './RegisterForm.css'
 // react* modules
 import { Link } from "react-router";
-import { Form } from "react-bootstrap";
+import { Form, Spinner } from "react-bootstrap";
 
 function RegisterForm({formData, handleSubmit, handleChange, loading}) {
   const { firstName, lastName, email, image, password, passwordCompare,  errors } = formData
@@ -69,7 +69,7 @@ function RegisterForm({formData, handleSubmit, handleChange, loading}) {
           // controlId="password-confirm"
         />
         {/* SUBMIT BUTTON */}
-        <BgButton loadingState={loading}>
+        <BgButton loadingState={loading} type="submit">
           {loading ? <Spinner animation="border" variant="light" /> : 'Submit'}
         </BgButton>
       </Form>

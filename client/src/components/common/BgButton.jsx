@@ -2,12 +2,11 @@ import PropTypes from 'prop-types'
 import { Button } from 'react-bootstrap'
 import * as styles from './BgButton.css'
 
-const BgButton = ({ children, loadingState, onClick, outline, navbar }) => {
+const BgButton = ({ children, loadingState, outline, navbar }) => {
   return (
     <Button
       className={styles.button}
-      type={onClick ? "button" : "submit"}
-      onClick={onClick}
+      type="submit"
       disabled={loadingState ? 1 : 0}
       outline={outline ? 1 : 0}
       navbar={navbar ? 1 : 0}

@@ -1,12 +1,16 @@
-// LoginForm component
-// Handles the form fields and validation
+/**
+ * LoginForm component
+ * Handles the form fields and validation
+ *
+ */
+
 // Importing Local components
 import InputField from "../../common/InputField";
 import BgButton from "../../common/BgButton";
 import BgCard from "../../common/BgCard";
 import * as styles from './LoginForm.css';
 // react* modules
-import { Form } from "react-bootstrap";
+import { Form, Spinner } from "react-bootstrap";
 import { Link } from "react-router";
 
 
@@ -37,8 +41,7 @@ function LoginForm({formData, handleSubmit, handleChange, loading}) {
           error={errors.password}
         />
         {/* SUBMIT BUTTON */}
-        <BgButton
-          loadingState={loading}>
+        <BgButton loadingState={loading} type="submit">
           {loading ? <Spinner animation="border" variant="light" /> : 'Submit'}
         </BgButton>
       </Form>

@@ -23,9 +23,7 @@ async function addProduct(data){
 
 // UPDATE PRODUCT Request
 async function updateProduct(id, data){
-  console.log(`Sending update request, id: ${id}`)
   const response =  await api.put(`/api/products/edit/${id}`, data)
-  console.log(response?.data)
   return response
 }
 

@@ -55,7 +55,7 @@ export const addProduct = createAsyncThunk(
 export const updateProduct = createAsyncThunk(
   'products/updateProduct',
   async({ id, data }, thunkAPI) => {
-    console.log('Updating product: ', id)
+    console.log('[Thunk] Updating product: ', id)
     try {
       const response = await productService.updateProduct(id, data)
       console.log('response:\n', response.data)

@@ -8,7 +8,6 @@ function DashboardLinks() {
     <Fragment>
       <Link className={styles.dashboardLink} to='users'>User List</Link>
       <Link className={styles.dashboardLink} to='users-add'>Add a new user</Link>
-      <Link className={styles.dashboardLink} to='users-edit/:id'>Add a new user</Link>
       <Link className={styles.dashboardLink} to='images-new'>Upload new image</Link>
       <Link className={styles.dashboardLink} to='images-change'>Change image</Link>
     </Fragment>
