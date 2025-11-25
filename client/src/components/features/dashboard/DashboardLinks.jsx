@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 
 import * as styles from './DashboardLinks.css'
 

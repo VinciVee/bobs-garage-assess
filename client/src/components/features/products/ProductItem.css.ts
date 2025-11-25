@@ -10,3 +10,9 @@ export const cardImage = style({
   objectFit: "cover",
   objectPosition: "top center",
 })
+
+export const favStar = style({
+  marginLeft: "4em",
+  display: "inline-block",
+  marginTop: "2em",
+})

@@ -4,23 +4,23 @@ import twColors from "tailwindcss/colors.js"
 export const root = createGlobalTheme(":root", {
   // Creating semantic tokens
   fonts: {
-    // brand: "florante_at_lauraregular, apple-system, serif",
-    // body: "Chivo Mono, apple-system, sans-serif"
+    brand: "Oswald, apple-system, serif",
+    body: "Inter, apple-system, sans-serif"
   },
   colors: {
     // SEMANTIC TOKENS
     // 70% of the color - based on light/dark mode
-    primary: twColors.orange[50],
+    primary: twColors.slate[900],
     // Text, complements primary
-    complementary: twColors.black,
+    complementary: twColors.white,
     // also called 'accent' - 5% of website, used for emphasis or add splash of colour
-    brand: twColors.rose[500],
-    brandLight: twColors.rose[400],
-    brandDark: twColors.rose[700],
+    brand: twColors.sky[600],
+    brandLight: twColors.sky[300],
+    brandDark: twColors.sky[800],
 
     // Color tokens
-    success: twColors.cyan[700],
-    warning: twColors.orange[500],
+    success: twColors.emerald[600],
+    warning: twColors.orange[600],
     error: twColors.red[600],
     grey200: twColors.gray[200],
     grey300: twColors.gray[300],

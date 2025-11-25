@@ -17,8 +17,6 @@ function UploadImage() {
 
     const formData = new FormData()
     formData.append('file', file)
-    // const url = 'http://localhost:3001/api/admin/uploadImage'
-    // formData.append('name', file.className)
 
     try {
       const res = adminService.uploadImage((formData))

@@ -1,15 +1,15 @@
-// Snippet rafce.
+// Footer
+import * as styles from './Footer.css'
+
 const Footer = () => {
   // Use JavaScript Date class
   const date = new Date();
-  // use String.fromCharCode(169) to output the copytright symbol.
-  // use date.getFullYear() to oupt the current year.
-  // This will update the year for us each year.
+
   return (
-    <footer className="bg-success mt-3">
+    <footer className={styles.footerBar}>
       <p className="py-3 text-end text-white me-4">
         copyright { String.fromCharCode(169)}
-        { ' ' + date.getFullYear()} Websites &apos;R&apos; Us
+        { ' ' + date.getFullYear()} Bob&apos;s Garage
       </p>
 
     </footer>

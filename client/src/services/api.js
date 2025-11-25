@@ -31,13 +31,16 @@ api.interceptors.response.use(null, (error) => {
 
 // SET DEFAULT REQUEST HEADERS WITH THE TOKEN
 export function setHeaderToken(){
+  console.log('[api.js] setHeaderToken, binding token to headers...')
   const token = localStorage.getItem("token")
   if(token){
     // LOGGED IN
-    api.defaults.headers.common["Authorization"] = "Bearer " + token;
+    // api.defaults.headers.common["Authorization"] = "Bearer " + token;
+    api.defaults.headers.common['x-auth-token'] = token
   } else {
     // LOGGED OUT
-    delete api.defaults.headers.common["Authorization"]
+    // delete api.defaults.headers.common["Authorization"]
+    delete api.defaults.headers.common['x-auth-token']
   }
 }
 setHeaderToken();

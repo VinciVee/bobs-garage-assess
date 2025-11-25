@@ -1,11 +1,23 @@
-import { Link } from 'react-router';
+// React modules
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
+// Redux modules
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteProduct } from '../../../slices/products/productThunks';
 // Icons
-import { FaTimes, FaPencilAlt } from 'react-icons/fa';
+import { FaTimes, FaPencilAlt, FaStar, FaRegStar } from 'react-icons/fa';
 import { IconContext } from 'react-icons/lib';
+// Local modules
 import * as styles from './ProductItem.css'
 
 const ProductItem = ({product, isAdmin, isAuth, handleDelete}) => {
   const { id, name, desc, image, price } = product;
+  const [favourite, setFavourite] = useState(false)
+
+  const toggleFav = (e) => {
+    e.preventDefault()
+    setFavourite(!favourite)
+  }
 
   return (
     <div className={`card ${styles.cardSize}`}>
@@ -14,6 +26,10 @@ const ProductItem = ({product, isAdmin, isAuth, handleDelete}) => {
         <h5 className="card-title">{name}</h5>
         <p className="card-text">{desc}</p>
         <p className="card-text">${price}</p>
+      </div>
+      <div className={styles.favStar} onClick={toggleFav}>
+        Favourite: { favourite ?
+          <FaStar color='red' size='2em'/> : <FaRegStar color='red' size='2em'/>}
       </div>
       <div className="d-grid card-footer bg-secondary-subtle gap-3">
         {/* Admin Buttons */}

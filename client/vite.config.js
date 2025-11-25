@@ -7,5 +7,15 @@ export default defineConfig({
   plugins: [
     react(),
     vanillaExtractPlugin()
-  ]
+  ],
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  }
 })

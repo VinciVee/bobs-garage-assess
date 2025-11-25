@@ -1,78 +1,70 @@
-
-import PropTypes from 'prop-types';
+// React* modules
 import { Fragment } from 'react'
-import { Link } from 'react-router';
-
-import {FaHome, FaQuestion, FaPlus, FaSignInAlt, FaDoorOpen, FaSignOutAlt, FaUsers } from 'react-icons/fa'
-import { GiFlowerPot } from "react-icons/gi"
+import { Link, Links } from 'react-router-dom';
+import {FaSignInAlt, FaDoorOpen, FaSignOutAlt, FaUsers } from 'react-icons/fa'
 import { IconContext } from 'react-icons/lib'
+import { Container, Nav, Navbar, NavDropdown, ToggleButton } from 'react-bootstrap';
+// Other modules
+import PropTypes from 'prop-types';
+// Redux modules
 import { useDispatch, useSelector } from 'react-redux'
 import { logout, getIsAuth, getIsAdmin } from '../../slices/auth/authSlice'
+// Local modules
+import * as styles from './Header.css'
+import BgCheck from '../common/BgCheck'
 
 
-const Header = ({ branding = "My App" }) => {
+const Header = ({ branding = "Bob&apos;s Garage" }) => {
   const dispatch = useDispatch()
-
   const isAdmin = useSelector(getIsAdmin)
   const isAuth = useSelector(getIsAuth)
 
-  const leave = (e) => {
+  const leave=(e)=>{
     console.log('Logout click, e: ', e.target)
     dispatch(logout())
   }
 
-  // Create variables to store some JSX
-  // Admin links
-  const adminLinks = (
-    <Fragment key={'2'}>
-      <Link className='nav-link' to='/add-product'>
-        <FaPlus />Add Product</Link>
-      <Link className='nav-link' to='/admin'>
-        <FaUsers />Admin Dashboard</Link>
-    </Fragment>
-  )
+  const handleChange=(e)=>{
+    // Switch themes
+  }
 
-  // Authlinks
+  // Admin Dashboard
+  const userLinks = (
+    <NavDropdown title="Admin" id="userAccount">
+      { isAdmin? <NavDropdown.Item as={Link} to="/admin">Dashboard</NavDropdown.Item> : null }
+      <NavDropdown.Item onClick={leave}>Logout</NavDropdown.Item>
+    </NavDropdown>
+  )
+  // Register and Login
   const authLinks = (
-    <Fragment key={'3'}>
-      <Link className='nav-link' onClick={leave}><FaSignOutAlt />Logout</Link>
-    </Fragment>
-  )
-
-  const loginRegisterLinks = (
-    <Fragment key={'4'}>
-      <Link className='nav-link' to='/login'><FaSignInAlt />Login</Link>
-      <Link className='nav-link' to='/register'><FaDoorOpen />Register</Link>
-    </Fragment>
+    <Nav.Item>
+      <Nav.Link as={Link} to="/login">Login</Nav.Link>
+      <Nav.Link as={Link} to="/register">Register</Nav.Link>
+    </Nav.Item>
   )
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-success mb-3">
-      <div className="container-fluid">
-        <Link className="navbar-brand" to="/">{branding}</Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <IconContext.Provider value={{size: "1.5em" }}>
-            <div className="navbar-nav ms-auto">
-              <Link className="nav-link active" aria-current="page" to="/"><FaHome /> Home</Link>
-              <Link className="nav-link" to="/products"><GiFlowerPot /> Products</Link>
-              <Link className="nav-link" to="/about"><FaQuestion /> About</Link>
-
+    <header>
+      <Navbar expand="lg" className='bg-body-tertiary' bg="dark" data-bs-theme="dark">
+        <Container >
+          <Navbar.Brand as={Link} to="/">Bob&apos;s Garage</Navbar.Brand>
+          <Navbar.Toggle aria-control="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link as={Link} to="/products">Services</Nav.Link>
+              <Nav.Link as={Link} to="/about">About</Nav.Link>
               {/* Conditional */}
-              { (isAdmin && isAuth) ? adminLinks : null }
-              { isAuth ? authLinks : loginRegisterLinks }
-            </div>
-          </IconContext.Provider>
-        </div>
-      </div>
-    </nav>
-  );
+              { isAuth? userLinks : authLinks }
+              <ToggleButton onChange={handleChange}>Theme
+                {/* Dark/light switch */}
+                {/* {isDarkMode ? 'Light Mode' : 'Dark Mode'} */}
+              </ToggleButton>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </header>
+  )
 }
-
-// Header.propTypes = {
-//     branding: PropTypes.string
-// }
 
 export default Header;

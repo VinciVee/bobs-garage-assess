@@ -6,7 +6,7 @@ import { fetchImageURL, fetchImageList, uploadImage } from './adminThunks'
 
 // INITIAL STATE
 const initialState = {
-  homepageImage: '',
+  homepageImage: localStorage.getItem("backImage") || '',
   imageList: [],
   status: 'idle',
   error: null
@@ -16,7 +16,13 @@ const initialState = {
 const adminSlice = createSlice({
   name: 'admin',
   initialState,
-  reducers: {},
+  reducers: {
+    setHomepageImage(state, action) {
+      if(!action.payload) return payloadError(state, "set the homepage background image")
+      state.homepageImage = action.payload
+      localStorage.setItem("backImage", action.payload)
+    }
+  },
   extraReducers: (builder) => {
     builder
     // FETCH IMAGE URL
@@ -61,6 +67,7 @@ const adminSlice = createSlice({
 // Export Selectors
 export const selectHomepageImage = state => state.admin.homepageImage
 export const selectImageList = state => state.admin.imageList
-
+// Export Actions
+export const { setHomepageImage } = adminSlice.actions
 // Export Reducer
 export default adminSlice.reducer

@@ -11,7 +11,7 @@ async function uploadImage(formData) {
 
 // GET IMAGE URL
 async function getImageURL(filename){
-  const response = await api.get(`/api/admin/getImageURL:${filename}`)
+  const response = await api.get(`/api/admin/getImageURL/${filename}`)
   console.log(response?.data)
   return response
 }

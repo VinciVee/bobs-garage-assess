@@ -1,6 +1,6 @@
 // Import icons & Link
 import { FaTimes, FaPencilAlt } from 'react-icons/fa'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 
 function UserItem({user, handleDelete}) {
 

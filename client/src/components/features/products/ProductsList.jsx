@@ -3,7 +3,7 @@ import ProductItem from './ProductItem'
 import { useDispatch, useSelector } from 'react-redux'
 import { getIsAdmin, getIsAuth } from '../../../slices/auth/authSlice'
 import { deleteProduct } from '../../../slices/products/productThunks';
-import { Navigate } from 'react-router';
+import { Navigate } from 'react-router-dom';
 
 function ProductsList({productsList}) {
   const dispatch = useDispatch()

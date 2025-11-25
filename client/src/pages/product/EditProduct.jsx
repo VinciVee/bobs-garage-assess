@@ -5,7 +5,7 @@
  */
 // React Hooks
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router-dom';
 // Redux modules
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProductById, getProductStatus } from '../../slices/products/productSlice'
