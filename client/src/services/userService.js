@@ -15,14 +15,16 @@ async function getUserById(id){
 }
 
 // ADD USER Request
-function addUser(newUser){
-  const response = api.post('/api/users/add', newUser)
-  console.log('userService, response: ', response?.data)
+async function addUser(newUser){
+  console.log('Sending request for new user:', JSON.stringify(newUser))
+  const response = await api.post('/api/users/add', newUser)
+  console.log('userService, response: ', response)
   return response
 }
 
 // UPDATE USER Request
-async function updateUser({id, data}){
+async function updateUser(id, data){
+  console.log('[userService] data: ', JSON.stringify(data))
   const response = await api.put(`/api/users/edit/${id}`, data)
   console.log('userService, response: ', response?.data)
   return response

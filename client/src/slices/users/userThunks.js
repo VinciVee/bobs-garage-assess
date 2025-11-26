@@ -34,7 +34,7 @@ export const addUser = createAsyncThunk(
   'users/addUser',
   async (newUser, thunkAPI ) => {
     try {
-      console.log('Adding a new user....')
+      console.log('Adding new user....')
       const response = await userService.addUser(newUser)
 
       console.log('response:\n', response.data)

@@ -12,7 +12,7 @@ import * as styles from './RegisterForm.css'
 import { Link } from "react-router";
 import { Form, Spinner } from "react-bootstrap";
 
-function RegisterForm({formData, imageFile, handleSubmit, handleChange, loading}) {
+function RegisterForm({formData, handleSubmit, handleChange, loading}) {
   const { firstName, lastName, email, image, password, passwordCompare,  errors } = formData
 
   return (
@@ -51,10 +51,9 @@ function RegisterForm({formData, imageFile, handleSubmit, handleChange, loading}
         {/* IMAGE */}
         <UploadImage
           label="Upload an image*"
-          name="profile image"
-          value={imageFile}
-          placeholder="Choose image to upload"
-          error={errors.imageFile}
+          name="image"
+          handleChange={handleChange}
+          error={errors.image}
         />
         {/* PASSWORD */}
         <InputField

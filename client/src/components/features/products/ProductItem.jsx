@@ -32,7 +32,7 @@ const ProductItem = ({product, isAdmin, isAuth, handleDelete}) => {
         {/* Admin Buttons */}
         { isAdmin && isAuth ? (
           <IconContext.Provider value={{ size: '2em'}}>
-            <Link to={`/edit/${id}`}>
+            <Link to={`/admin/users-edit/${id}`}>
               <button
                 type='button'
                 className='btn btn-warning p-3 text-primary fw-bold' >

@@ -29,7 +29,6 @@ const AddProduct = () => {
   });
 
   const { name, desc, image, price, errors} = formData
-  let imageFile = '';
 
   // onChange event handler
   const handleChange = e => {
@@ -43,7 +42,7 @@ const AddProduct = () => {
   }
 
   // onSubmit event handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     console.log('onSubmit (AddProducts) running...');
@@ -83,7 +82,7 @@ const AddProduct = () => {
 
     // IMAGE
     // if empty
-    if(is_Empty(imageFile)){
+    if(is_Empty(image)){
       console.log('Use default image')
       setFormData({ ...formData, image: defaultImage })
     }
@@ -131,13 +130,18 @@ const AddProduct = () => {
     }
     // CLIENT-SIDE VALIDATION END --------
 
+    // DISPATCH USER
     try {
-      // Getting image URL
       const fileData = new FormData()
-      fileData.append('file', imageFile)
-      const res = adminService.uploadImage((fileData))
-      const url = res? res.path : defaultImage
-      setFormData({...formData, image: url})
+      let url = defaultImage
+      // Uploading image if present
+      if(image !== "") {
+        fileData.append('file', image)
+        const res = await adminService.uploadImage((fileData))
+        if(res?.path) url = res.path
+      }
+      console.log(`default: ${defaultImage}, image: ${image}, url: ${url}`)
+      setFormData(prev => ({...prev, image: url}))
 
       // Send new product
       dispatch(addProduct({
@@ -160,7 +164,6 @@ const AddProduct = () => {
       <BgCard title="Add the new Service's details">
         <ProductForm
           formData={formData}
-          imageFile={imageFile}
           handleSubmit={handleSubmit}
           handleChange={handleChange}
           loading={loading}

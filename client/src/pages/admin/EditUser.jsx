@@ -4,7 +4,8 @@
  *
  */
 // react modules
-import { useState, useParams } from 'react'
+import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 // redux modules
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '../../slices/users/userThunks'
@@ -16,8 +17,10 @@ import UserForm from '../../components/features/forms/UserForm'
 import adminService from '../../services/adminService'
 
 function EditUser() {
-  // Get users details
-  const paramId = Number(useParams().id)
+  const defaultImage = './public/Portrait_Placeholder.png'
+  // Get users id
+  const { id } = useParams();
+  const paramId = Number(id);
   // Other hooks
   const dispatch = useDispatch()
   const user = useSelector((state) => selectUserById(state, paramId))
@@ -33,7 +36,6 @@ function EditUser() {
     errors: {}
   })
   const [loading, setLoading ] = useState(false)
-  let imageFile = '';
 
   // User properties
   const { firstName, lastName, email, image, password, passwordCompare, isAdmin, errors } = formData
@@ -47,6 +49,7 @@ function EditUser() {
   }
 
   console.log(`EditUser.jsx id: ${paramId}`)
+
   // onChange event handler
   const handleChange = (e) => {
     const { name, type, value, checked, files } = e.target
@@ -60,10 +63,9 @@ function EditUser() {
   }
 
   // onSubmit event handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    const defaultImage = './public/Portrait_Placeholder.png'
 
     // ADD VALIDATION
     // TBD
@@ -71,14 +73,15 @@ function EditUser() {
     console.log('Updating user...')
 
     try {
-      // Getting image URL if present
       const fileData = new FormData()
-      if(imageFile) {
-        fileData.append('file', imageFile)
-        const res = adminService.uploadImage((fileData))
-        const url = res? res.path : defaultImage
-        setFormData({...formData, image: url})
+      let url = defaultImage
+      // Uploading image if present
+      if(image !== "") {
+        fileData.append('file', image)
+        const res = await adminService.uploadImage((fileData))
+        if(res?.path) url = res.path
       }
+      console.log(`default: ${defaultImage}, image: ${image}, url: ${url}`)
       // Send updated user
       dispatch(updateUser({
         id: paramId,
@@ -86,7 +89,7 @@ function EditUser() {
           firstName,
           lastName,
           email,
-          image,
+          image: url,
           password,
           isAdmin } })).unwrap()
     } catch (error) {
@@ -101,7 +104,6 @@ function EditUser() {
     <BgCard title="Edit user" authform>
       <UserForm
         formData={formData}
-        imageFile={imageFile}
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         loading={loading}

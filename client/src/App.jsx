@@ -14,6 +14,7 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register'
 // Admin Routes
 import Dashboard from './pages/admin/Dashboard';
+import EditUser from './pages/admin/EditUser';
 // Components
 import Layout from './components/layout/Layout';
 
@@ -35,7 +36,9 @@ function App() {
         <Route path='register' element={<Register />} />
 
         {/* Admin */}
-        <Route path='admin' element={<Dashboard />} />
+        <Route path='admin' element={<Dashboard />}>
+          <Route path='users-edit/:id' element={<EditUser />} />
+        </Route>
 
         {/* Not Found - 404 */}
         <Route path='*' element={<NotFound />} />

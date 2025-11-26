@@ -3,14 +3,14 @@ import api from './api'
 // REGISTER POST REQUEST
 async function register(data){
   const response = await api.post('/api/auth/register', data)
-  console.log(response?.data)
+  console.log('[authService] Response:', response?.data)
   return response
 }
 
 // LOGIN POST REQUEST
 async function login({ email, password }){
   const response = await api.post('/api/auth/login', {email, password})
-  console.log(response?.data)
+  console.log('[authService] Response:', response?.data)
   return response
 }
 

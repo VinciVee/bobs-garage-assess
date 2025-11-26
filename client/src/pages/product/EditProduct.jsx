@@ -17,6 +17,8 @@ import adminService from '../../services/adminService';
 
 
 const EditProduct = () => {
+  const defaultImage = './public/Service_Placeholder.png'
+  // States
   const [loading, setLoading ] = useState(false)
   const [formData, setFormData] = useState({
     // Original product details
@@ -27,7 +29,8 @@ const EditProduct = () => {
     errors: {}
   })
   // Hooks
-  const paramId = Number(useParams().id)
+  const { id } = useParams();
+  const paramId = Number(id);
   const navigate = useNavigate()
   const dispatch = useDispatch()
   // Find matching products
@@ -49,7 +52,7 @@ const EditProduct = () => {
   }, [product, dispatch, paramId, status])
 
   const { name, desc, image, price} = formData;
-  let imageFile = '';
+
 
   // onChange event handler
   const handleChange = (e) => {
@@ -63,32 +66,33 @@ const EditProduct = () => {
   }
 
   // onSubmit event handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    const defaultImage = './public/Service_Placeholder.png'
 
     // Client-side validation - Check for errors
     // TBD
 
     console.log('Updating Service ', paramId)
 
+    // DISPATCH USER
     try {
-      // Getting image URL if present
       const fileData = new FormData()
-      if(imageFile) {
-        fileData.append('file', imageFile)
-        const res = adminService.uploadImage((fileData))
-        const url = res? res.path : defaultImage
-        setFormData({...formData, image: url})
+      let url = defaultImage
+      // Uploading image if present
+      if(image !== "") {
+        fileData.append('file', image)
+        const res = await adminService.uploadImage((fileData))
+        if(res?.path) url = res.path
       }
+      console.log(`default: ${defaultImage}, image: ${image}, url: ${url}`)
       // Send updated product
       dispatch(updateProduct({
         id: paramId,
         data: {
           name,
           desc,
-          image,
+          image: url,
           price }})).unwrap()
     } catch (error) {
       console.log('Failed to update service', error)
@@ -107,7 +111,6 @@ const EditProduct = () => {
       <BgCard title="Edit the Service's details">
         <ProductForm
           formData={formData}
-          imageFile={imageFile}
           handleSubmit={handleSubmit}
           handleChange={handleChange}
           loading={loading}

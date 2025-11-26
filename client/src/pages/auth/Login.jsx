@@ -7,7 +7,7 @@ import * as styles from './Login.css'
 import { login } from '../../slices/auth/authThunks'
 import { is_Empty } from '../../util/validation'
 import LoginForm from '../../components/features/forms/LoginForm'
-import { ToastContainer, toast } from 'react-bootstrap'
+import { ToastContainer, toast } from 'react-toastify'
 
 function Login() {
   const navigate = useNavigate()
@@ -23,14 +23,14 @@ function Login() {
   const { email, password } = formData
 
   if(isAuth) {
-    setTimeout(() => {
+    const toastNotify = () => {
       toast('User already logged-in. Redirecting...', {
-        position: "",
+        position: "top-center",
         autoClose: 2000,
         theme: "light",
       })
-      return <Navigate to='/' />
-    }, 2000)
+    }
+    setTimeout(() => { return <Navigate to='/' /> }, 2000)
   }
 
 

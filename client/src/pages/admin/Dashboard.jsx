@@ -8,6 +8,7 @@ import { Tab, Tabs } from 'react-bootstrap'
 import Users from './Users'
 import AddUser from './AddUser'
 import ChangeImage from './ChangeImage'
+import AddProduct from '../product/AddProduct.jsx'
 
 function Dashboard() {
   // Set up the selectors
@@ -24,13 +25,16 @@ function Dashboard() {
       className="mb-3">
       <Tab eventKey="users" title="User List">
         <Users />
+        <Outlet />
       </Tab>
       <Tab eventKey="add-user" title="Add User">
         <AddUser />
-        <Outlet />
       </Tab>
       <Tab eventKey="change-image" title="Change Banner">
         <ChangeImage />
+      </Tab>
+      <Tab eventKey="add-product" title="Add a Service">
+        <AddProduct />
       </Tab>
     </Tabs>
   )

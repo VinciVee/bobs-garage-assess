@@ -6,13 +6,15 @@ import { is_Empty } from "../../util/validation"
 // React* tools
 import { useState } from "react"
 import { Navigate, useNavigate } from "react-router"
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer, toast } from "react-toastify"
 // Local Modules
 import * as styles from './Register.css'
 import RegisterForm from "../../components/features/forms/RegisterForm"
 import adminService from "../../services/adminService"
 
 function Register() {
+  const defaultImage = './public/Portrait_Placeholder.png'
+  // Hooks
   const navigate = useNavigate()
   const [loading, setLoading ] = useState(false)
   const [registerStatus, setRegisterStatus] = useState('idle')
@@ -23,24 +25,24 @@ function Register() {
     image: '',
     password: '',
     passwordCompare: '',
-    errors: {}
+    isAdmin: false,
+    errors: {},
   })
   const dispatch = useDispatch()
   const isAuth = useSelector(getIsAuth)
-  let imageFile = '';
 
   if(isAuth) {
-    setTimeout(() => {
+    const toastNotify = () => {
       toast('User already logged-in. Redirecting...', {
-        position: "",
+        position: "top-center",
         autoClose: 2000,
         theme: "light",
       })
-      return <Navigate to='/' />
-    }, 2000)
+    }
+    setTimeout(() => { return <Navigate to='/' /> }, 2000)
   }
 
-  const { firstName, lastName, email, image, password, passwordCompare,  errors } = formData
+  const { firstName, lastName, email, image, password, passwordCompare, isAdmin, errors } = formData
 
   // onChange event handler
   const handleChange = e => {
@@ -55,10 +57,9 @@ function Register() {
 
   // const canSave = (firstName !== '' && email != '' && email !== '') && registerStatus === 'idle'
   // onSubmit event handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault()
     setLoading(true)
-    const defaultImage = './public/Portrait_Placeholder.png'
 
     // CLIENT-SIDE VALIDATION
     // First name
@@ -80,7 +81,7 @@ function Register() {
       return
     }
     // IMAGE
-    if(is_Empty(imageFile)){
+    if(is_Empty(image)){
       console.log('Use default image')
       setFormData({ ...formData, image: defaultImage })
     }
@@ -104,22 +105,25 @@ function Register() {
       return
     }
 
+
     try {
-      // Getting image URL if present
       const fileData = new FormData()
-      if(imageFile) {
-        fileData.append('file', imageFile)
-        const res = adminService.uploadImage((fileData))
-        const url = res? res.path : defaultImage
-        setFormData({...formData, image: url})
+      let url = defaultImage
+      // Uploading image if present
+      if(image !== "") {
+        fileData.append('file', image)
+        const res = await adminService.uploadImage((fileData))
+        if(res?.path) url = res.path
       }
+      console.log(`default: ${defaultImage}, image: ${image}, url: ${url}`)
       // setRegisterStatus('pending')
       dispatch(register({
         firstName,
         lastName,
         email,
-        image,
-        password })).unwrap()
+        image: url,
+        password,
+        isAdmin })).unwrap()
       setTimeout(() => {navigate('/')}, 1000)
     } catch (error) {
       console.log('Error: ', error.message)
@@ -134,7 +138,6 @@ function Register() {
       <ToastContainer />
       <RegisterForm
         formData={formData}
-        imageFile={imageFile}
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         loading={loading}
