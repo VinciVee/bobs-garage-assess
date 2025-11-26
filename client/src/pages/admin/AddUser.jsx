@@ -17,16 +17,17 @@ function AddUser() {
     firstName: '',
     lastName: '',
     email: '',
-    imageFile: null,
+    image: '',
     password: '',
     passwordCompare: '',
     isAdmin: false,
     errors: {}
   })
 
-  const { firstName, lastName, email, imageFile, password, passwordCompare, isAdmin, errors } = formData
+  const { firstName, lastName, email, image, password, passwordCompare, isAdmin, errors } = formData
+  let imageFile = '';
 
-  // onChange
+  // onChange event handler
   const handleChange = (e) => {
     const { name, type, value, checked, files } = e.target
 
@@ -38,23 +39,26 @@ function AddUser() {
     }))
   }
 
-  const defaultImage = './public/Portrait_Placeholder.png'
-
-  // onSubmit
+  // onSubmit event handler
   const handleSubmit = (e) => {
     e.preventDefault()
     setLoading(true)
+    const defaultImage = './public/Portrait_Placeholder.png'
+
+    // ADD VALIDATION
+    // TBD
+
     console.log('Add new User - submitting...')
 
     // ADD VALIDATION
     try {
       // Getting image URL if present
-      let image = defaultImage
       const fileData = new FormData()
-      if(fileData) {
+      if(imageFile) {
         fileData.append('file', imageFile)
         const res = adminService.uploadImage((fileData))
-        image = res.path
+        const url = res? res.path : defaultImage
+        setFormData({...formData, image: url})
       }
       // Send user
       dispatch(addUser({
@@ -67,7 +71,7 @@ function AddUser() {
       console.log('Error: ', error.message)
       // return
     } finally {
-      setTimeout(() => {setLoading(false), 1000})
+      setTimeout(() => {setLoading(false)}, 1000)
     }
   }
 
@@ -75,6 +79,7 @@ function AddUser() {
     <BgCard title="Add in new user" authform>
       <UserForm
         formData={formData}
+        imageFile={imageFile}
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         loading={loading}

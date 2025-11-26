@@ -13,7 +13,6 @@ function UploadImage({label, name, value, placeholder, handleChange, error}) {
         isInvalid={!!error}
         name={name}
         value={value}
-        defaultValue={placeholder}
         onChange={handleChange}
       />
       <Form.Control.Feedback type="invalid">

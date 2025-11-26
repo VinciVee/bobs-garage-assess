@@ -13,6 +13,7 @@ import { selectUserById } from '../../slices/users/userSlice'
 import { is_Empty } from '../../util/validation'
 import BgCard from '../../components/common/BgCard'
 import UserForm from '../../components/features/forms/UserForm'
+import adminService from '../../services/adminService'
 
 function EditUser() {
   // Get users details
@@ -32,6 +33,7 @@ function EditUser() {
     errors: {}
   })
   const [loading, setLoading ] = useState(false)
+  let imageFile = '';
 
   // User properties
   const { firstName, lastName, email, image, password, passwordCompare, isAdmin, errors } = formData
@@ -45,36 +47,53 @@ function EditUser() {
   }
 
   console.log(`EditUser.jsx id: ${paramId}`)
-  // onChange
+  // onChange event handler
   const handleChange = (e) => {
-    const { name, type, value, checked } = e.target
+    const { name, type, value, checked, files } = e.target
 
     setFormData((prev) => ({
       ...prev,
-      // form input name and value
-      [name]: type === "checkbox" ? checked : value
+      // Checking value type before setting formData
+      [name]: type === "checkbox" ? checked :
+      type === "file" ? files[0] : value
     }))
   }
 
-  // onSubmit
+  // onSubmit event handler
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log('Add new User - submit running...')
     setLoading(true)
+    const defaultImage = './public/Portrait_Placeholder.png'
 
     // ADD VALIDATION
+    // TBD
 
-    // Updated User (values from deconstructed formData)
-    const updUser = { firstName, lastName, email, image, password, isAdmin }
+    console.log('Updating user...')
 
     try {
-      console.log('Updating user...')
-      dispatch(updateUser({ id: paramId, data: updUser })).unwrap()
+      // Getting image URL if present
+      const fileData = new FormData()
+      if(imageFile) {
+        fileData.append('file', imageFile)
+        const res = adminService.uploadImage((fileData))
+        const url = res? res.path : defaultImage
+        setFormData({...formData, image: url})
+      }
+      // Send updated user
+      dispatch(updateUser({
+        id: paramId,
+        data: {
+          firstName,
+          lastName,
+          email,
+          image,
+          password,
+          isAdmin } })).unwrap()
     } catch (error) {
       console.log('Error: ', error.message)
       // return
     } finally {
-      setTimeout(() => {setLoading(false), 1000})
+      setTimeout(() => {setLoading(false)}, 1000)
     }
   }
 
@@ -82,6 +101,7 @@ function EditUser() {
     <BgCard title="Edit user" authform>
       <UserForm
         formData={formData}
+        imageFile={imageFile}
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         loading={loading}

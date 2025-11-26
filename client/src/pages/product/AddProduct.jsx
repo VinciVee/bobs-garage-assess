@@ -23,13 +23,13 @@ const AddProduct = () => {
   const [formData, setFormData] = useState({
     name: '',
     desc: '',
-    image: defaultImage,
+    image: '',
     price: '',
     errors: {},
   });
 
   const { name, desc, image, price, errors} = formData
-  let imageFile = null;
+  let imageFile = '';
 
   // onChange event handler
   const handleChange = e => {
@@ -148,7 +148,7 @@ const AddProduct = () => {
     } catch (error) {
       console.log('Failed to add service', error)
     } finally {
-      setTimeout(() => {setLoading(false), 1000})
+      setTimeout(() => {setLoading(false)}, 1000)
       navigate('/products')
     }
   };

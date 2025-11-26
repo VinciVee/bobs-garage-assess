@@ -12,8 +12,8 @@ import * as styles from './RegisterForm.css'
 import { Link } from "react-router";
 import { Form, Spinner } from "react-bootstrap";
 
-function RegisterForm({formData, handleSubmit, handleChange, loading}) {
-  const { firstName, lastName, email, imageFile, password, passwordCompare,  errors } = formData
+function RegisterForm({formData, imageFile, handleSubmit, handleChange, loading}) {
+  const { firstName, lastName, email, image, password, passwordCompare,  errors } = formData
 
   return (
     <BgCard title="Register" authform>

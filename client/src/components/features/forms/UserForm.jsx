@@ -12,8 +12,8 @@ import BgCheck from "../../common/BgCheck"
 // react* modules
 import { Form, Spinner } from "react-bootstrap";
 
-function UserForm({formData, handleSubmit, handleChange, loading}) {
-  const { firstName, lastName, email, imageFile, password, passwordCompare, isAdmin, errors } = formData
+function UserForm({formData, imageFile, handleSubmit, handleChange, loading}) {
+  const { firstName, lastName, email, image, password, passwordCompare, isAdmin, errors } = formData
 
   return (
     <Form onSubmit={handleSubmit} encType='multipart/form-data'>
