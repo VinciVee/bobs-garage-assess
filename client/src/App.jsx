@@ -17,10 +17,8 @@ import Register from './pages/auth/Register'
 // Admin Routes
 import Dashboard from './pages/admin/Dashboard';
 import Users from './pages/admin/Users';
-import User from './pages/admin/User';
 import AddUser from './pages/admin/AddUser';
 import EditUser from './pages/admin/EditUser';
-import UploadImage from './pages/admin/UploadImage';
 import ChangeImage from './pages/admin/ChangeImage';
 // Components
 import Layout from './components/layout/Layout';
@@ -45,10 +43,8 @@ function App() {
         {/* Admin */}
         <Route path='admin' element={<Dashboard />}>
           <Route path='users' element={<Users />} />
-          <Route path='users/:id' element={<User />} />
           <Route path='users-add' element={<AddUser />} />
           <Route path='users-edit/:id' element={<EditUser />} />
-          <Route path='images-new' element={<UploadImage />} />
           <Route path='images-change' element={<ChangeImage />} />
         </Route>
 

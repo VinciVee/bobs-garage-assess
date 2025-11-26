@@ -1,9 +1,6 @@
 // React modules
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-// Redux modules
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteProduct } from '../../../slices/products/productThunks';
 // Icons
 import { FaTimes, FaPencilAlt, FaStar, FaRegStar } from 'react-icons/fa';
 import { IconContext } from 'react-icons/lib';

@@ -5,6 +5,7 @@
  */
 // Importing Local components
 import InputField from "../../common/InputField";
+import UploadImage from "../dashboard/UploadImage";
 import BgButton from "../../common/BgButton";
 // import * as styles from '.css';
 // react* modules
@@ -36,13 +37,11 @@ function ProductForm({formData, handleSubmit, handleChange, loading}) {
         error={errors.desc}
       />
       {/* IMAGE */}
-      <InputField
-        label="Image URL*"
-        name="image"
-        type="text"
+      <UploadImage
+        label="Upload an image*"
+        name="product image"
         value={image}
-        placeholder="https://example.com/image"
-        handleChange={handleChange}
+        placeholder="Choose image to upload"
         error={errors.image}
       />
       {/* PRICE */}

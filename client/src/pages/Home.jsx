@@ -16,11 +16,6 @@ const Home = () => {
           <div className='col-4'> Col 2 </div>
           <div className='col-4'> Col 3 </div>
         </section>
-        <section className='row'>
-          <h2 className={styles.headings}>Heading</h2>
-          <div className="col-6"> Col 1 </div>
-          <div className="col-6"> Col 2 </div>
-        </section>
       </div>
     </>
   )

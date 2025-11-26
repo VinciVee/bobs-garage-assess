@@ -12,7 +12,7 @@ function Dashboard() {
   const isAdmin = useSelector(getIsAdmin)
 
   // Redirect the use if they are not authenticated / not admins
-  if (!isAdmin && !isAuth ) {
+  if (!isAdmin && !isAuth) {
     return <Navigate to='/login' />
   }
 

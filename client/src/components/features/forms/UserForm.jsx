@@ -4,6 +4,7 @@
  *
  */
 // Importing Local components
+import UploadImage from "../dashboard/UploadImage";
 import InputField from "../../common/InputField";
 import BgButton from "../../common/BgButton";
 import BgCheck from "../../common/BgCheck"
@@ -45,6 +46,14 @@ function UserForm({formData, handleSubmit, handleChange, loading}) {
         placeholder="name@example.com"
         handleChange={handleChange}
         error={errors.email}
+      />
+      {/* IMAGE */}
+      <UploadImage
+        label="Upload an image*"
+        name="profile image"
+        value={image}
+        placeholder="Choose image to upload"
+        error={errors.image}
       />
       {/* PASSWORD */}
       <InputField
