@@ -18,9 +18,9 @@ module.exports = {
   // HASH PASSWORD
   async hashPassword(password){
     const salt = await bcrypt.genSalt(10)
-    const hashPassword = await bcrypt.hash(password, salt)
+    const hashedPassword = await bcrypt.hash(password, salt)
 
-    return hashPassword
+    return hashedPassword
   },
 
   // REMOVE PASSWORD FROM USER DETAILS BEFORE SENDING TO CLIENT

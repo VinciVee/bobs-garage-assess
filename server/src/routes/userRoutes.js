@@ -54,7 +54,7 @@ module.exports = () => {
         password: await hashPassword(password),
         isAdmin
       })
-      usersLog('Added User:\n', user.toJSON())
+      usersLog('Added User:\n', JSON.stringify(user))
       res.send(user)
     } catch (error) {
       return next(ApiError.internal('The item selected could not be added', error))
@@ -64,7 +64,7 @@ module.exports = () => {
 
   // PUT /api/users/edit/:id - edit a user
   router.put('/edit/:id', [auth, admin], async(req,res,next) => {
-    usersLog(`[${req.method}] ${req.url}`)
+    usersLog(`[${req.method}] ${req.url}, body: ${JSON.stringify(req.body)}`)
     try {
       const id = Number(req.params.id)
       if(!id) {
@@ -72,16 +72,22 @@ module.exports = () => {
       }
       const { firstName, lastName, email, image, password, isAdmin } = req.body
 
-      const user = await User.update({
+      let updatedUser = {
         firstName,
         lastName,
         email,
         image,
-        password: await hashPassword(password),
+        password,
         isAdmin
-      }, { where: { id : id }})
+      }
 
-      usersLog('User details updated:\n', user.toJSON())
+      if(password) {
+        updatedUser.password = await hashPassword(password)
+      }
+
+      const user = await User.update(updatedUser, { where: { id : id }})
+
+      usersLog('User details updated:\n', JSON.stringify(user))
       res.send(user)
 
     } catch (error) {
