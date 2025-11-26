@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getIsAdmin, getIsAuth } from '../../../slices/auth/authSlice'
 import { deleteProduct } from '../../../slices/products/productThunks';
 import { Navigate } from 'react-router-dom';
+import * as styles from './ProductList.css'
 
 function ProductsList({productsList}) {
   const dispatch = useDispatch()
@@ -21,7 +22,7 @@ function ProductsList({productsList}) {
   }
 
   return (
-    <div>
+    <div className={styles.productGrid}>
       {productsList.map((service) =>
         <ProductItem
           key={service.id}

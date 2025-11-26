@@ -2,8 +2,12 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 // Icons
-import { FaTimes, FaPencilAlt, FaStar, FaRegStar } from 'react-icons/fa';
+import { MdOutlineStarPurple500, MdOutlineStarOutline } from "react-icons/md";
+
+import { GoPencil } from "react-icons/go";
+import { LuDelete } from "react-icons/lu";
 import { IconContext } from 'react-icons/lib';
+import { Card, Button, ButtonGroup, ToggleButton } from 'react-bootstrap'
 // Local modules
 import * as styles from './ProductItem.css'
 
@@ -16,40 +20,50 @@ const ProductItem = ({product, isAdmin, isAuth, handleDelete}) => {
     setFavourite(!favourite)
   }
 
+  const adminOptions = (
+    <IconContext.Provider
+      value={{ className: styles.favStar, size: '1.5em'}}>
+      <ButtonGroup vertical>
+        <Button
+          as={Link}
+          to={`/admin/users-edit/${id}`}
+          className={styles.adminBtn} >
+          <GoPencil />
+        </Button>
+        <Button
+          type='button'
+          className={styles.adminBtn}
+          onClick={(e) => handleDelete(id, e) } >
+          <LuDelete />
+        </Button>
+      </ButtonGroup>
+    </IconContext.Provider>
+  )
+
   return (
-    <div className={`card ${styles.cardSize}`}>
-      <img src={image} className={styles.cardImage} alt={name} />
-      <div className="card-body">
-        <h5 className="card-title">{name}</h5>
-        <p className="card-text">{desc}</p>
-        <p className="card-text">${price}</p>
-      </div>
-      <div className={styles.favStar} onClick={toggleFav}>
-        Favourite: { favourite ?
-          <FaStar color='red' size='2em'/> : <FaRegStar color='red' size='2em'/>}
-      </div>
-      <div className="d-grid card-footer bg-secondary-subtle gap-3">
-        {/* Admin Buttons */}
-        { isAdmin && isAuth ? (
-          <IconContext.Provider value={{ size: '2em'}}>
-            <Link to={`/admin/users-edit/${id}`}>
-              <button
-                type='button'
-                className='btn btn-warning p-3 text-primary fw-bold' >
-                <FaPencilAlt /> Edit
-              </button>
-            </Link>
-            <button
-              type='button'
-              className='btn btn-info text-danger p-3 fw-bold'
-              onClick={(e) => handleDelete(id, e) } >
-              <FaTimes />Delete
-            </button>
+    <Card className={`bg-dark text-light ${styles.cardContainer}`}>
+      <Card.Img
+        variant="top"
+        src={image}
+        className={styles.cardImage}
+        alt={name} />
+      <Card.ImgOverlay className={styles.overlay}>
+      {/* Admin Buttons */}
+      { isAdmin && isAuth ? adminOptions : null }
+      </Card.ImgOverlay>
+      <Card.Body>
+        <Card.Title className={styles.cardTitle}>{name}
+          <IconContext.Provider value={{ className: styles.favStar, size: '1.5em' }}>
+            <ToggleButton id={id} className={styles.favStar} onClick={toggleFav} value={name}>
+              { favourite? <MdOutlineStarOutline />
+                : <MdOutlineStarPurple500 /> }
+            </ToggleButton>
           </IconContext.Provider>
-          ) : (<div> Service Footer </div>)
-        }
-      </div>
-    </div>
+        </Card.Title>
+        <Card.Subtitle className={styles.servPrice}>${price}</Card.Subtitle>
+        <Card.Text>{desc}</Card.Text>
+      </Card.Body>
+    </Card>
   )
 }
 

@@ -141,13 +141,12 @@ const AddProduct = () => {
         if(res?.path) url = res.path
       }
       console.log(`default: ${defaultImage}, image: ${image}, url: ${url}`)
-      setFormData(prev => ({...prev, image: url}))
 
       // Send new product
       dispatch(addProduct({
         name,
         desc,
-        image,
+        image: url,
         price })).unwrap()
     } catch (error) {
       console.log('Failed to add service', error)
