@@ -21,8 +21,13 @@ const app = express();
 // ---------- MIDDLEWARE ----------
 app.use(helmet())
 app.use(cors(corsOptions))
+// Security headers - to solve Cross-Origin Policy issues
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  next();
+});
 // Setting up uploads folder to serve static assets
-app.use('./uploads', express.static('uploads'))
+app.use('/uploads', express.static('uploads'))
 
 // Default middleware for parsing
 app.use(express.json());

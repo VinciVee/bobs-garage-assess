@@ -49,6 +49,7 @@ module.exports = () => {
     const { email, password } = req.body
 
     try {
+
       // Find user
       let user = await findUser(email)
       if(!user) return next(ApiError.badRequest('Incorrect email or password'))
@@ -68,12 +69,13 @@ module.exports = () => {
   // GET /api/auth/
   router.get('/', auth, async(req,res,next) => {
     authLog(`[${req.method}] ${req.url}, user id:${req.user.id}`)
-    const options = {
-      attributes: {exclude: ['password']}}
+    const options = { attributes: {exclude: ['password']} }
 
     try {
+      if(req.user.id === null) return next(ApiError.badRequest('No token provided'))
       // Find logged-in user and return details w/out password
       const user = await User.findByPk(req.user.id, options)
+
       authLog('[loaduser] Returning found user...')
       res.json(user)
 
