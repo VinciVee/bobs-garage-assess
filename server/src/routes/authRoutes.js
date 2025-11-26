@@ -67,7 +67,8 @@ module.exports = () => {
 
   // GET LOGGED IN USER
   // GET /api/auth/
-  router.get('/', auth, async(req,res,next) => {
+  router.get('/', auth,
+    async(req,res,next) => {
     authLog(`[${req.method}] ${req.url}, user id:${req.user.id}`)
     const options = { attributes: {exclude: ['password']} }
 

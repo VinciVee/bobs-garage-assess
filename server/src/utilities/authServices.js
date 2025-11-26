@@ -46,12 +46,26 @@ module.exports = {
         isAdmin: user.isAdmin
     }}
     const secret = config.authentication.jwtSecret
-    const tokenExpireTime = 60 * 60 * 24 // Time To Live (TTL) - 24 hrs in seconds
+    const tokenExpireTime = 60 * 60 * 24 * 7 // Time To Live (TTL) - 7 days in seconds
     const token = jwt.sign(
       payload,
       secret,
       { expiresIn: tokenExpireTime })
     return token
+  },
+
+  // VERIFY TOKEN
+  jwtVerifyToken(token){
+    try {
+      const decoded = jwt.verify(token, config.authentication.jwtSecret)
+      return { valid: true, expired: false, decoded }
+
+    } catch (error) {
+      if (error && error.name === 'TokenExpiredError') {
+        return { valid: false, expired: true, decoded: null }
+      }
+      return { valid: false, expired: false, decoded: null, error: error }
+    }
   },
 
   // COMPARE PASSWORD

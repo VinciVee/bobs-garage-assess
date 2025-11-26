@@ -4,26 +4,26 @@
 const jwt = require('jsonwebtoken')
 const debugAuth = require('debug')('app:auth')
 // Utilities
-const ApiError = require('../utilities/ApiError')
-// Config
-const config = require('../config/config')
+const apiError = require('../utilities/ApiError')
+const { jwtVerifyToken } = require('../utilities/authServices')
 
-
+// Verifies if token is valid
 module.exports = function(req, res, next) {
   const token = req.header('x-auth-token')
   // debugAuth('Auth middleware..., token: ', token)
+  if(!token) return next(apiError.badRequest('No token supplied, authorisation denied'))
 
-  if(!token) {
-    return next(ApiError.badRequest('No token supplied, authorisation denied'))
-  }
   try {
-    const decoded = jwt.verify(token, config.authentication.jwtSecret)
+    const {valid, expired, decoded} = jwtVerifyToken(token)
+
+    if (!valid) {
+      if (expired) return next(apiError.badRequest('Token expired'))
+      return next(apiError.badRequest('Invalid token'))
+    }
+
     debugAuth('Decoding token... token: %O', decoded.user)
-
-    req.user = decoded.user
-    next()
-
+    req.user = decoded.user , next()
   } catch (error) {
-    return next(ApiError.internal('Could not retrieve token', error))
+    return next(apiError.internal('Could not retrieve token', error))
   }
 }

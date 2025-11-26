@@ -34,7 +34,9 @@ const upload = multer({ storage: storage })
 module.exports = () => {
   // UPLOAD IMAGE
   // POST /api/admin/uploadImage
-  router.post('/uploadImage', upload.single('file'), (req,res,next) => {
+  router.post('/uploadImage',
+    upload.single('file'),
+    (req,res,next) => {
     try {
       adminLog(`[${req.method}] ${req.url}`)
 
