@@ -48,7 +48,7 @@ const Header = ({ branding = "Bob&apos;s Garage" }) => {
       <Navbar expand="lg" className='bg-body-tertiary' bg="dark" data-bs-theme="dark">
         <Container >
           <Navbar.Brand as={Link} to="/">Bob&apos;s Garage</Navbar.Brand>
-          <Navbar.Toggle aria-control="basic-navbar-nav" />
+          <Navbar.Toggle />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link as={Link} to="/products">Services</Nav.Link>
