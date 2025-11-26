@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { login } from '../../slices/auth/authThunks'
-import { is_Empty } from '../../util/validation'
+import { Navigate, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getIsAuth } from '../../slices/auth/authSlice'
 // Local Modules
 import * as styles from './Login.css'
+import { login } from '../../slices/auth/authThunks'
+import { is_Empty } from '../../util/validation'
 import LoginForm from '../../components/features/forms/LoginForm'
 
 function Login() {
@@ -17,13 +18,17 @@ function Login() {
     errors: {}
   })
 
+  const isAuth = useSelector(getIsAuth)
   const { email, password } = formData
 
+  if (isAuth) return <Navigate to='/' />
+
+  // onChange event handler
   const handleChange = (e) => setFormData({
     ...formData,
     [e.target.name]: e.target.value // form input name and value
   })
-
+  // onSubmit event handler
   const handleSubmit = (e) => {
     e.preventDefault()
     setLoading(true)
@@ -41,7 +46,6 @@ function Login() {
       setLoading(false)
       return
     }
-
     try {
       dispatch(login({ email, password }))
       setTimeout(() => {navigate('/'), 1000})

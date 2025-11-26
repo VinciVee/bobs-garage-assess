@@ -12,28 +12,37 @@ import { addProduct } from "../../slices/products/productThunks";
 import { alpha, is_Empty, isValidPrice} from "../../util/validation"
 import BgCard from "../../components/common/BgCard";
 import ProductForm from "../../components/features/forms/ProductForm";
+import adminService from "../../services/adminService";
 
 const AddProduct = () => {
+  const defaultImage = './public/Service_Placeholder.png'
+  // Hooks
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [loading, setLoading ] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     desc: '',
-    image: '',
-    price: 0.00,
+    image: defaultImage,
+    price: '',
     errors: {},
   });
 
-
   const { name, desc, image, price, errors} = formData
+  let imageFile = null;
 
+  // onChange event handler
   const handleChange = e => {
-    setFormData({
-      ...formData, [e.target.name]: e.target.value
-    })
+    const { name, type, value, checked, files } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      // Checking value type before setting formData
+      [name]: type === "checkbox" ? checked :
+      type === "file" ? files[0] : value
+    }))
   }
 
+  // onSubmit event handler
   const handleSubmit = (e) => {
     e.preventDefault()
     setLoading(true)
@@ -42,6 +51,7 @@ const AddProduct = () => {
     // CLIENT-SIDE VALIDATION --------
     // https://getbootstrap.com/docs/5.3/forms/validation/
     // NAME
+    // If empty
     if (is_Empty(name)){
       console.log('Name empty')
       setFormData({
@@ -54,7 +64,7 @@ const AddProduct = () => {
     } else {
       setFormData({...formData, errors: {name: ''}})
     }
-
+    // if alphanumeric
     if(alpha(name)){
       console.log('Name special characters')
       setFormData({
@@ -69,18 +79,17 @@ const AddProduct = () => {
     }
 
     // DESCRIPTION
+    // TBD
 
     // IMAGE
-    let defaultImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYoR2rpqdWmu6bsR0BZb6y2Lw2TaglVVB8TQ&s'
-    if(is_Empty(image)){
+    // if empty
+    if(is_Empty(imageFile)){
       console.log('Use default image')
       setFormData({ ...formData, image: defaultImage })
-    }else {
-      defaultImage = image
-      console.log(`image: ${defaultImage}`)
     }
 
     // PRICE
+    // if empty
     if(is_Empty(price)){
       console.log('Price is empty')
       setFormData({
@@ -93,7 +102,7 @@ const AddProduct = () => {
     } else {
       setFormData({...formData, errors: { price: ''}})
     }
-
+    // if negative value
     if(price <= 0){
       console.log('Price negative or zero')
       setFormData({
@@ -106,7 +115,7 @@ const AddProduct = () => {
     } else {
       setFormData({ ...formData, errors: {price: ''}})
     }
-
+    // If valid
     if(!isValidPrice(price)){
       console.log('Price is not valid')
       setFormData({
@@ -122,16 +131,20 @@ const AddProduct = () => {
     }
     // CLIENT-SIDE VALIDATION END --------
 
-    // Create product object
-    const newProduct = {
-      name,
-      desc,
-      image: defaultImage,
-      price
-    }
-
     try {
-      dispatch( addProduct(newProduct)).unwrap()
+      // Getting image URL
+      const fileData = new FormData()
+      fileData.append('file', imageFile)
+      const res = adminService.uploadImage((fileData))
+      const url = res? res.path : defaultImage
+      setFormData({...formData, image: url})
+
+      // Send new product
+      dispatch(addProduct({
+        name,
+        desc,
+        image,
+        price })).unwrap()
     } catch (error) {
       console.log('Failed to add service', error)
     } finally {
@@ -147,6 +160,7 @@ const AddProduct = () => {
       <BgCard title="Add the new Service's details">
         <ProductForm
           formData={formData}
+          imageFile={imageFile}
           handleSubmit={handleSubmit}
           handleChange={handleChange}
           loading={loading}

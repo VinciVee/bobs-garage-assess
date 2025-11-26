@@ -13,11 +13,11 @@ import { Link } from "react-router";
 import { Form, Spinner } from "react-bootstrap";
 
 function RegisterForm({formData, handleSubmit, handleChange, loading}) {
-  const { firstName, lastName, email, image, password, passwordCompare,  errors } = formData
+  const { firstName, lastName, email, imageFile, password, passwordCompare,  errors } = formData
 
   return (
     <BgCard title="Register" authform>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} encType='multipart/form-data'>
         {/* FIRSTNAME */}
         <InputField
           label="First name*"
@@ -52,9 +52,9 @@ function RegisterForm({formData, handleSubmit, handleChange, loading}) {
         <UploadImage
           label="Upload an image*"
           name="profile image"
-          value={image}
+          value={imageFile}
           placeholder="Choose image to upload"
-          error={errors.image}
+          error={errors.imageFile}
         />
         {/* PASSWORD */}
         <InputField

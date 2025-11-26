@@ -1,15 +1,28 @@
-import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
+import { Tab, Tabs } from 'react-bootstrap'
+// Local modules
+import AddUser from '../../../pages/admin/AddUser'
+import Users from '../../../pages/admin/Users'
+import ChangeImage from '../../../pages/admin/ChangeImage'
 
 import * as styles from './DashboardLinks.css'
 
 function DashboardLinks() {
   return (
-    <Fragment>
-      <Link className={styles.dashboardLink} to='users'>User List</Link>
-      <Link className={styles.dashboardLink} to='users-add'>Add a new user</Link>
-      <Link className={styles.dashboardLink} to='images-change'>Change image</Link>
-    </Fragment>
+    <Tabs
+      defaultActiveKey="users"
+      id="dashboard-tabs"
+      className="mb-3">
+      <Tab eventKey="users" title="User List">
+        <Users />
+      </Tab>
+      <Tab eventKey="add-user" title="Add User">
+        <AddUser />
+      </Tab>
+      <Tab eventKey="change-image" title="Change Banner">
+        <ChangeImage />
+      </Tab>
+    </Tabs>
   )
 }
 

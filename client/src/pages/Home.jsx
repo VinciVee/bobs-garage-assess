@@ -2,8 +2,6 @@
  * Home.jsx
  *
  */
-import { Link } from 'react-router-dom'
-
 import * as styles from './Home.css'
 
 const Home = () => {

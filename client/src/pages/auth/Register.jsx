@@ -1,14 +1,16 @@
-import { useState } from "react"
-import { Navigate, useNavigate } from "react-router"
+// Redux modules
 import { useDispatch, useSelector } from "react-redux"
 import { getIsAuth } from "../../slices/auth/authSlice"
 import { register } from "../../slices/auth/authThunks"
 import { is_Empty } from "../../util/validation"
-// React tools
-import { toast } from 'react-toastify'
+// React* tools
+import { useState } from "react"
+import { Navigate, useNavigate } from "react-router"
+import { ToastContainer, toast } from 'react-toastify'
 // Local Modules
 import * as styles from './Register.css'
 import RegisterForm from "../../components/features/forms/RegisterForm"
+import { autoBatchEnhancer } from "@reduxjs/toolkit"
 
 function Register() {
   const navigate = useNavigate()
@@ -27,7 +29,14 @@ function Register() {
   const isAuth = useSelector(getIsAuth)
 
   if(isAuth) {
-    return <Navigate to='/' />
+    toast('User already logged-in. Redirecting...', {
+      position: "",
+      autoClose: 5000,
+      theme: "light",
+    })
+    setTimeout(() => {
+      return <Navigate to='/' />, 1000
+    })
   }
 
   const { firstName, lastName, email, image, password, passwordCompare,  errors } = formData
@@ -95,12 +104,15 @@ function Register() {
   }
 
   return (
-    <RegisterForm
-      formData={formData}
-      handleSubmit={handleSubmit}
-      handleChange={handleChange}
-      loading={loading}
-    />
+    <>
+      <ToastContainer />
+      <RegisterForm
+        formData={formData}
+        handleSubmit={handleSubmit}
+        handleChange={handleChange}
+        loading={loading}
+      />
+    </>
   )
 }
 

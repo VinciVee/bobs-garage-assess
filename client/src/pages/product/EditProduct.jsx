@@ -13,9 +13,10 @@ import { updateProduct, fetchProduct } from '../../slices/products/productThunks
 // Local components
 import BgCard from '../../components/common/BgCard'
 import ProductForm from '../../components/features/forms/ProductForm';
+import adminService from '../../services/adminService';
+
 
 const EditProduct = () => {
-  // States
   const [loading, setLoading ] = useState(false)
   const [formData, setFormData] = useState({
     // Original product details
@@ -48,28 +49,49 @@ const EditProduct = () => {
   }, [product, dispatch, paramId, status])
 
   const { name, desc, image, price} = formData;
-  //  On Change
+  let imageFile = null;
+
+  // onChange event handler
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+    const {name, type, value, checked, files} = e.target
+    setFormData((prev) => ({
+      ...prev,
+      // Checking value type before setting formData
+      [name]: type === "checkbox" ? checked :
+      type === "file" ? files[0] : value
+    }))
   }
 
+  // onSubmit event handler
   const handleSubmit = (e) => {
     e.preventDefault()
     setLoading(true)
+    const defaultImage = './public/Service_Placeholder.png'
 
     // Client-side validation - Check for errors
+    // TBD
 
-    // Object for updated service
-    const updService = { name, desc, image, price }
-    console.log('Updating Service: ', updService)
+    console.log('Updating Service ', paramId)
 
     try {
-      dispatch(updateProduct({ id: paramId, data: updService})).unwrap()
-    } catch (err) {
-      console.log('Failed to update service', err)
+      // Getting image URL if present
+      const fileData = new FormData()
+      if(imageFile) {
+        fileData.append('file', imageFile)
+        const res = adminService.uploadImage((fileData))
+        const url = res? res.path : defaultImage
+        setFormData({...formData, image: url})
+      }
+      // Send updated product
+      dispatch(updateProduct({
+        id: paramId,
+        data: {
+          name,
+          desc,
+          image,
+          price }})).unwrap()
+    } catch (error) {
+      console.log('Failed to update service', error)
     } finally {
       setTimeout(() => {setLoading(false), 1000})
       navigate('/products')
@@ -85,6 +107,7 @@ const EditProduct = () => {
       <BgCard title="Edit the Service's details">
         <ProductForm
           formData={formData}
+          imageFile={imageFile}
           handleSubmit={handleSubmit}
           handleChange={handleChange}
           loading={loading}

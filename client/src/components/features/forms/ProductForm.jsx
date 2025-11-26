@@ -12,10 +12,10 @@ import BgButton from "../../common/BgButton";
 import { Form, Spinner } from "react-bootstrap";
 
 function ProductForm({formData, handleSubmit, handleChange, loading}) {
-  const {name, desc, image, price, errors} = formData
+  const {name, desc, imageFile, price, errors} = formData
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} encType='multipart/form-data'>
       {/* NAME */}
       <InputField
         label="Service name*"
@@ -40,9 +40,10 @@ function ProductForm({formData, handleSubmit, handleChange, loading}) {
       <UploadImage
         label="Upload an image*"
         name="product image"
-        value={image}
+        value={imageFile}
         placeholder="Choose image to upload"
-        error={errors.image}
+        handleChange={handleChange}
+        error={errors.imageFile}
       />
       {/* PRICE */}
       <InputField

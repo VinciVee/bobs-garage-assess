@@ -13,10 +13,10 @@ import BgCheck from "../../common/BgCheck"
 import { Form, Spinner } from "react-bootstrap";
 
 function UserForm({formData, handleSubmit, handleChange, loading}) {
-  const { firstName, lastName, email, image, password, passwordCompare, isAdmin, errors } = formData
+  const { firstName, lastName, email, imageFile, password, passwordCompare, isAdmin, errors } = formData
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} encType='multipart/form-data'>
       {/* FIRSTNAME */}
       <InputField
         label="First name*"
@@ -51,9 +51,9 @@ function UserForm({formData, handleSubmit, handleChange, loading}) {
       <UploadImage
         label="Upload an image*"
         name="profile image"
-        value={image}
+        value={imageFile}
         placeholder="Choose image to upload"
-        error={errors.image}
+        error={errors.imageFile}
       />
       {/* PASSWORD */}
       <InputField

@@ -1,10 +1,14 @@
-//
-import { Navigate, Outlet } from "react-router"
+// Redux modules
 import { useSelector } from 'react-redux'
-
 import { getIsAdmin, getIsAuth } from '../../slices/auth/authSlice.js'
-
-import DashboardLinks from '../../components/features/dashboard/DashboardLinks.jsx'
+// React* modules
+import { Navigate, Outlet } from "react-router"
+import { Tab, Tabs } from 'react-bootstrap'
+import { ToastContainer, toast } from 'react-toastify'
+// Local modules
+import Users from './Users'
+import AddUser from './AddUser'
+import ChangeImage from './ChangeImage'
 
 function Dashboard() {
   // Set up the selectors
@@ -13,19 +17,35 @@ function Dashboard() {
 
   // Redirect the use if they are not authenticated / not admins
   if (!isAdmin && !isAuth) {
-    return <Navigate to='/login' />
+    toast('User already logged-in. Redirecting...', {
+      position: "",
+      autoClose: 5000,
+      theme: "light",
+    })
+    setTimeout(() => {
+      return <Navigate to='/' />, 1000
+    })
   }
 
   return (
-    <main className='row'>
-      <aside className='col-2 bg-info-subtle'>
-        <DashboardLinks />
-      </aside>
-        <section className="col-10 bg-warning-subtle">
-          <h2>Admin Dashboard</h2>
-            <Outlet />
-        </section>
-    </main>
+    <>
+      <ToastContainer />
+      <Tabs
+        defaultActiveKey="users"
+        id="dashboard-tabs"
+        className="mb-3">
+        <Tab eventKey="users" title="User List">
+          <Users />
+        </Tab>
+        <Tab eventKey="add-user" title="Add User">
+          <AddUser />
+          <Outlet />
+        </Tab>
+        <Tab eventKey="change-image" title="Change Banner">
+          <ChangeImage />
+        </Tab>
+      </Tabs>
+    </>
   )
 }
 

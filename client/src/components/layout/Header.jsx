@@ -60,7 +60,7 @@ const Header = ({ branding = "Bob&apos;s Garage" }) => {
         data-bs-theme="dark">
         <Container className={styles.headerLayout}>
           <Navbar.Brand as={Link} to="/">Bob&apos;s Garage</Navbar.Brand>
-          <Navbar.Toggle autoClose="outside"/>
+          <Navbar.Toggle autoclose="outside"/>
           <Navbar.Collapse id="basic-navbar-nav" className={styles.navCollapse}>
             <Nav>
               {/* Links for everyone */}
