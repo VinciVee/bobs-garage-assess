@@ -11,6 +11,7 @@ const { jwtVerifyToken } = require('../utilities/authServices')
 module.exports = function(req, res, next) {
   const token = req.header('x-auth-token')
   // debugAuth('Auth middleware..., token: ', token)
+
   if(!token) return next(apiError.badRequest('No token supplied, authorisation denied'))
 
   try {

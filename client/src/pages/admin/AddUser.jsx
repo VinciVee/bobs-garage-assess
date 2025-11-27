@@ -10,7 +10,7 @@ import BgCard from '../../components/common/BgCard'
 import UserForm from '../../components/features/forms/UserForm'
 
 function AddUser() {
-  const defaultImage = './public/Portrait_Placeholder.png'
+  const defaultImage = '/assets/Portrait_Placeholder.png'
   // Hooks
   const dispatch = useDispatch()
   // States
@@ -56,7 +56,7 @@ function AddUser() {
       // Uploading image if present
       if(image !== "") {
         fileData.append('file', image)
-        const res = await adminService.uploadImage((fileData))
+        const res = await adminService.uploadImage(fileData)
         if(res?.path) url = res.path
       }
       console.log(`default: ${defaultImage}, image: ${image}, url: ${url}`)

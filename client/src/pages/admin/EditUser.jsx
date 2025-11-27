@@ -17,7 +17,7 @@ import UserForm from '../../components/features/forms/UserForm'
 import adminService from '../../services/adminService'
 
 function EditUser() {
-  const defaultImage = './public/Portrait_Placeholder.png'
+  const defaultImage = '/assets/Portrait_Placeholder.png'
   // Get users id
   const { id } = useParams();
   const paramId = Number(id);
@@ -78,7 +78,7 @@ function EditUser() {
       // Uploading image if present
       if(image !== "") {
         fileData.append('file', image)
-        const res = await adminService.uploadImage((fileData))
+        const res = await adminService.uploadImage(fileData)
         if(res?.path) url = res.path
       }
       console.log(`default: ${defaultImage}, image: ${image}, url: ${url}`)

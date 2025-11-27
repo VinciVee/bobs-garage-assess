@@ -8,7 +8,8 @@ export const uploadImage = createAsyncThunk(
     console.log('Uploading image...')
     try {
       const response = await adminService.uploadImage(formData)
-      return response.data
+      // returns {message, filename, path}
+      return response
 
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message)

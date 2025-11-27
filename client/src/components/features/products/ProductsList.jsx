@@ -23,10 +23,10 @@ function ProductsList({productsList}) {
 
   return (
     <div className={styles.productGrid}>
-      {productsList.map((service) =>
+      {productsList.map((item) =>
         <ProductItem
-          key={service.id}
-          product={service}
+          key={item.id}
+          product={item}
           isAdmin={isAdmin}
           isAuth={isAuth}
           handleDelete={handleDelete}

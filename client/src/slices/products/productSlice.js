@@ -15,7 +15,11 @@ const initialState = {
 const productSlice = createSlice({
   name: 'products',
   initialState,
-  reducers: {},
+  reducers: {
+    setStatus(state, action) {
+      state.status = action.payload;
+    },
+   },
   // possible outcomes: pending, fullfilled, rejected
   extraReducers: (builder) => {
     builder
@@ -43,6 +47,7 @@ const productSlice = createSlice({
     .addCase(updateProduct.rejected, handleRejected)
     .addCase(updateProduct.fulfilled, (state, action) => {
       if(!action.payload) return payloadError(state, "updated")
+        console.log('[Slice] payload:',action.payload)
 
       state.status = 'succeeded'
       state.error = null
@@ -75,19 +80,15 @@ const productSlice = createSlice({
   }
 })
 
+//EXPORT ACTIONS
+export const { setStatus } = productSlice.actions;
+
 // EXPORT SELECTORS
 // note: state.'product'.... refers to 'product' in store.js
 export const selectAllProducts = (state) => state.products.productList
-export const getProductStatus = (state) => state.products.status
+export const productSliceStatus = (state) => state.products.status
 export const getProductError = (state) => state.products.errors
-export const selectProductById = (state, id) => {
-  if (!id) return undefined;
-  return state.products.productList.find(item => item.id === id)
-}
-// export const selectProductById = (id) => createSelector(
-//   [selectAllProducts],
-//   (products) => products.find(item => item.id === id)
-// )
+export const selectProductById = (state, id) => state.products.productList.find(item => item.id === id)
 
-// Export the reducer
+
 export default productSlice.reducer

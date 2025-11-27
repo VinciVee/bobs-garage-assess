@@ -15,7 +15,7 @@ import ProductForm from "../../components/features/forms/ProductForm";
 import adminService from "../../services/adminService";
 
 const AddProduct = () => {
-  const defaultImage = './public/Service_Placeholder.png'
+  const defaultImage = '/assets/Service_Placeholder.png'
   // Hooks
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -137,7 +137,7 @@ const AddProduct = () => {
       // Uploading image if present
       if(image !== "") {
         fileData.append('file', image)
-        const res = await adminService.uploadImage((fileData))
+        const res = await adminService.uploadImage(fileData)
         if(res?.path) url = res.path
       }
       console.log(`default: ${defaultImage}, image: ${image}, url: ${url}`)

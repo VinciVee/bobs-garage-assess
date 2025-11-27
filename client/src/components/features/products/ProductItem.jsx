@@ -26,7 +26,7 @@ const ProductItem = ({product, isAdmin, isAuth, handleDelete}) => {
       <ButtonGroup vertical>
         <Button
           as={Link}
-          to={`/admin/users-edit/${id}`}
+          to={`/edit/${id}`}
           className={styles.adminBtn} >
           <GoPencil />
         </Button>

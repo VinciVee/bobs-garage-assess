@@ -1,52 +1,53 @@
 // Products.jsx
 
 import ProductsList from '../../components/features/products/ProductsList';
-import { useSelector } from 'react-redux';
-import { selectAllProducts, getProductError, getProductStatus } from '../../slices/products/productSlice'
+import { useSelector, useDispatch } from 'react-redux';
+import { selectAllProducts, getProductError, productSliceStatus, setStatus } from '../../slices/products/productSlice'
+import { useEffect } from 'react';
+import { fetchAllProducts } from '../../slices/products/productThunks';
 
 const Products = () => {
+  const dispatch = useDispatch()
   // Set Selectors
   const productsList = useSelector(selectAllProducts)
-  const status = useSelector(getProductStatus)
+  const status = useSelector(productSliceStatus)
   const error = useSelector(getProductError)
   console.log('Products.jsx - loading products:\n', productsList )
 
   let content;
 
-  switch (status) {
-    case 'loading':
-      console.log('Loading services...')
-      content = ( <p>Loading...</p> )
-      break
+  const loadingContent = ( <p>Loading...</p> )
+  const failedContent = ( <div className='text-danger'><p>{error}</p> </div> )
+  const succeededContent = (<div><ProductsList productsList={productsList} /></div> )
+  // If productsList are not showing
+  useEffect(()=> {
+    if (!productsList.length && status === 'idle') {
+      try {
+        dispatch(fetchAllProducts())
+      } catch (error) {
+        console.log('Error while fetching all products: ', error.message)
+      }
+    }
+  }, [status, dispatch, productsList])
 
-    case 'failed':
-      console.log('Error: failed to load services...')
-      content = (
-        <div className='text-danger'>
-          <p>{error}</p>
-        </div>
-      )
-      break
+  switch(status){
+    case "loading":
+      content = loadingContent;
+      break;
 
-    case 'succeeded':
-      content = (
-        <div>
-          <ProductsList
-            productsList={productsList}
-          />
-        </div>
-      )
-      break
+    case "failed":
+      content = failedContent;
+      break;
 
     default:
-      console.log('Default case for productsList status - Products.jsx')
+      content = succeededContent;
   }
 
   return (
     <>
       <h2>Bob's Services</h2>
       <div className="row">
-        { content }
+        {content}
       </div>
     </>
   )

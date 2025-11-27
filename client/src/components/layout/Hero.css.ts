@@ -3,12 +3,12 @@ import { vars } from "../../styles/themes.css";
 
 export const bgImage = style({
   backgroundRepeat: "no-repeat",
-  backgroundPosition: "center",
+  backgroundPosition: "top",
   backgroundSize: "cover",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  height: "50vh",
+  height: "70vh",
   width: "100%",
 })
 

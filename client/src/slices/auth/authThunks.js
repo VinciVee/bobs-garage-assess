@@ -1,6 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import authService from '../../services/authService'
-// import setAuthToken from '../../util/setAuthToken'
 
 // REGISTER POST REQUEST
 export const register = createAsyncThunk(
@@ -18,7 +17,6 @@ export const register = createAsyncThunk(
         }
 
         localStorage.setItem('token', response.data.token)
-        // setAuthToken(localStorage.token)
         // Get logged-in user's details
         const res = await authService.loadUser()
         return res.data

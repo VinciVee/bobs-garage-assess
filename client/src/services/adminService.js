@@ -6,7 +6,7 @@ async function uploadImage(fileData) {
     headers: { 'Content-Type': 'multipart/form-data' }
   })
   console.log('adminService, response: ', response?.data)
-  return response
+  return response.data
 }
 
 // GET IMAGE URL
