@@ -27,7 +27,7 @@ async function updateUser(id, data){
   console.log('[userService] data: ', JSON.stringify(data))
   const response = await api.put(`/api/users/edit/${id}`, data)
   console.log('userService, response: ', response?.data)
-  return response
+  return response.data
 }
 
 // DELETE USER Request

@@ -24,11 +24,11 @@ const Header = ({ branding = "Bob&apos;s Garage" }) => {
   }
 
   const handleClick=(e)=>{
-    // Switch themes
+    // SWITCH THEMES
     setDarkMode(!darkMode)
   }
 
-  // Admin Dashboard
+  // ADMIN DASHBOARD
   const userLinks = (
     <NavDropdown
       title={<FaCircleUser />}
@@ -44,7 +44,7 @@ const Header = ({ branding = "Bob&apos;s Garage" }) => {
       <NavDropdown.Item onClick={leave}>Logout</NavDropdown.Item>
     </NavDropdown>
   )
-  // Register and Login
+  // REGISTER AND LOGIN
   const authLinks = (
     <Nav>
       <Nav.Link as={Link} to="/login">Login</Nav.Link>
@@ -63,19 +63,19 @@ const Header = ({ branding = "Bob&apos;s Garage" }) => {
           <Navbar.Toggle autoclose="outside"/>
           <Navbar.Collapse id="basic-navbar-nav" className={styles.navCollapse}>
             <Nav>
-              {/* Links for everyone */}
+              {/* LINKS FOR EVERYONE */}
               <Nav.Link as={Link} to="/products">Services</Nav.Link>
               <Nav.Link as={Link} to="/about">About</Nav.Link>
 
-              {/* Links for logged-in users*/}
+              {/* LINKS FOR LOGGED-IN USERS */}
               { isAuth? userLinks : authLinks }
 
-              {/* Theme switch */}
+              {/* THEME SWITCH */}
               <IconContext.Provider value={{ className: styles.themeIcons, size:'1.5em' }}>
                 <ToggleButton onClick={handleClick} className={styles.themeButton}>
-                  { darkMode?
-                    <MdDarkMode /> :
-                    <MdLightMode /> }
+                  { darkMode
+                    ? <MdDarkMode />
+                    : <MdLightMode /> }
                 </ToggleButton>
               </IconContext.Provider>
 

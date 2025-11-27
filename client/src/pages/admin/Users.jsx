@@ -4,7 +4,8 @@
 
 import UsersList from '../../components/features/users/UsersList'
 import { useSelector } from 'react-redux'
-import { getUserError, getUserStatus } from '../../slices/users/userSlice'
+import { getUserError, getUserStatus, selectAllUsers } from '../../slices/users/userSlice'
+import { useEffect } from 'react'
 
 function Users() {
   const status = useSelector(getUserStatus)

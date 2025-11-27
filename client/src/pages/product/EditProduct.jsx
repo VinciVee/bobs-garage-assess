@@ -38,7 +38,7 @@ const EditProduct = () => {
   })
   useEffect(() => {
     if(updatedStatus==="idle" || !loading) {
-      if (product != null) {
+      if (product.name != null && product != null) {
         console.log('setting form data')
         setFormData({
           name: product.name,
@@ -83,12 +83,14 @@ const EditProduct = () => {
       const fileData = new FormData()
       let url = defaultImage
       // Uploading image if present
-      if(image !== "") {
+      if(image instanceof File) {
         fileData.append('file', image)
         const res = await adminService.uploadImage(fileData)
         console.log('res before url:', JSON.stringify(res))
         if(res.path != null) {url = res.path}
       }
+      // If image was not changed
+      if (image != null) { url = image }
       console.log(`default: ${defaultImage}, image: ${image}, url: ${url}`)
 
       // Send updated product

@@ -12,7 +12,7 @@ import BgCheck from "../../common/BgCheck"
 // react* modules
 import { Form, Spinner } from "react-bootstrap";
 
-function UserForm({formData, handleSubmit, handleChange, loading}) {
+function UserForm({formData, fileInputRef, handleSubmit, handleChange, loading}) {
   const { firstName, lastName, email, image, password, passwordCompare, isAdmin, errors } = formData
 
   return (
@@ -51,6 +51,7 @@ function UserForm({formData, handleSubmit, handleChange, loading}) {
       <UploadImage
         label="Upload an image*"
         name="image"
+        fileInputRef={fileInputRef}
         handleChange={handleChange}
         error={errors.image}
       />

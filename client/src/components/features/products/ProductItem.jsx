@@ -15,9 +15,8 @@ const ProductItem = ({product, isAdmin, isAuth, handleDelete}) => {
   const { id, name, desc, image, price } = product;
   const [favourite, setFavourite] = useState(false)
 
-  const toggleFav = (e) => {
-    e.preventDefault()
-    setFavourite(!favourite)
+  const handleClick = (e) => {
+    setFavourite(prev => !prev)
   }
 
   const adminOptions = (
@@ -52,14 +51,24 @@ const ProductItem = ({product, isAdmin, isAuth, handleDelete}) => {
       { isAdmin && isAuth ? adminOptions : null }
       </Card.ImgOverlay>
       <Card.Body>
+        {/* TITLE + FAV BUTTON */}
         <Card.Title className={styles.cardTitle}>{name}
           <IconContext.Provider value={{ className: styles.favStar, size: '1.5em' }}>
-            <ToggleButton id={id} className={styles.favStar} onClick={toggleFav} value={name}>
-              { favourite? <MdOutlineStarOutline />
-                : <MdOutlineStarPurple500 /> }
+            <ToggleButton
+              id={id}
+              className={styles.favStar}
+              type='checkbox'
+              checked={favourite}
+              onChange={() => setFavourite(prev => !prev)}
+              value={name}
+            >
+              { favourite
+                ? <MdOutlineStarPurple500 />
+                : <MdOutlineStarOutline /> }
             </ToggleButton>
           </IconContext.Provider>
         </Card.Title>
+        {/* TEXT + DESC */}
         <Card.Subtitle className={styles.servPrice}>${price}</Card.Subtitle>
         <Card.Text>{desc}</Card.Text>
       </Card.Body>

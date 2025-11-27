@@ -54,8 +54,8 @@ export const updateUser = createAsyncThunk(
       console.log('Updating user: ', id)
       const response = await userService.updateUser(id, data)
 
-      console.log('response:\n', response.data)
-      return response.data
+      console.log('[Thunk] Response:\n', response)
+      return response // response fron sequelize is number of rows updata
 
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message)

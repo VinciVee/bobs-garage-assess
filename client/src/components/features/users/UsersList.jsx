@@ -1,16 +1,27 @@
 // import useSelector
 import { useSelector, useDispatch } from "react-redux"
 // import selectAllUsers
-import { selectAllUsers } from '../../../slices/users/userSlice'
-import { getIsAdmin, getIsAuth } from "../../../slices/auth/authSlice"
-import { deleteUser } from "../../../slices/users/userThunks"
+import { getUserStatus, selectAllUsers } from '../../../slices/users/userSlice'
+import { deleteUser, fetchUserList } from "../../../slices/users/userThunks"
 import { Navigate } from "react-router"
 import UserItem from './UserItem'
+import { useEffect } from "react"
 
 function UsersList() {
   // Redux hooks
   const userList = useSelector(selectAllUsers)
+  const status = useSelector(getUserStatus)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (userList[0] != null && status === 'idle') {
+      try {
+        dispatch(fetchUserList())
+      } catch (error) {
+        console.log('Error while fetching all users: ', error.message)
+      }
+    }
+  }, [status, dispatch, userList])
 
   const handleDelete = (id, e) => {
     console.log('[UsersList] handleDelete: ', e.type);

@@ -26,6 +26,7 @@ export const overlay = style({
   display: "flex",
   justifyContent: "flex-end",
   alignItems: "flex-start",
+  height: '250px',
 })
 
 export const adminBtn = style({

@@ -12,16 +12,19 @@ const Products = () => {
   const productsList = useSelector(selectAllProducts)
   const status = useSelector(productSliceStatus)
   const error = useSelector(getProductError)
-  console.log('Products.jsx - loading products:\n', productsList )
 
   let content;
 
   const loadingContent = ( <p>Loading...</p> )
+
   const failedContent = ( <div className='text-danger'><p>{error}</p> </div> )
+
   const succeededContent = (<div><ProductsList productsList={productsList} /></div> )
+
+
   // If productsList are not showing
-  useEffect(()=> {
-    if (!productsList.length && status === 'idle') {
+  useEffect(() => {
+    if (productsList[0] != null && status === 'idle') {
       try {
         dispatch(fetchAllProducts())
       } catch (error) {
@@ -30,6 +33,8 @@ const Products = () => {
     }
   }, [status, dispatch, productsList])
 
+
+  console.log('Products.jsx - loading products:\n', productsList )
   switch(status){
     case "loading":
       content = loadingContent;
@@ -45,7 +50,7 @@ const Products = () => {
 
   return (
     <>
-      <h2>Bob's Services</h2>
+      <h2>Our's Services</h2>
       <div className="row">
         {content}
       </div>
