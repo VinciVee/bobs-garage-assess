@@ -17,7 +17,7 @@ const router = express.Router()
 
 module.exports = () => {
   // GET /api/users/ - get all users
-  router.get('/', async(req,res,next) => {
+  router.get('/', async (req,res,next) => {
     usersLog(`[${req.method}] ${req.url}`)
     try {
       const options = {
@@ -72,23 +72,20 @@ module.exports = () => {
       }
       const { firstName, lastName, email, image, password, isAdmin } = req.body
 
-      let updatedUser = {
-        firstName,
-        lastName,
-        email,
-        image,
-        password,
-        isAdmin
+      let updatedUser = { firstName, lastName, email, image, password, isAdmin }
+
+      if(password) { updatedUser.password = await hashPassword(password) }
+      const response = await User.update(updatedUser,
+        { where: { id : id } })
+      usersLog('User Updated. sequelize res:\n', response)
+
+      // Retrieve updated user from database to send as response
+      const user = await User.findByPk(id)
+      if (user === null) {
+        return next(ApiError.badRequest('The item(s) you were looking for do not exist'))
       }
-
-      if(password) {
-        updatedUser.password = await hashPassword(password)
-      }
-
-      const user = await User.update(updatedUser, { where: { id : id }})
-
-      usersLog('User details updated:\n', JSON.stringify(user))
-      res.send(user)
+      usersLog('sending back updated user: ', user)
+      res.status(200).send(user)
 
     } catch (error) {
       return next(ApiError.internal('The item selected could not be updated', error))

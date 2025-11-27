@@ -70,7 +70,8 @@ module.exports = () => {
         { name, desc, image, price }, { where: { id: id } })
 
       if(!updated){
-        return next(ApiError.badRequest('Bad request'))}
+        return next(ApiError.badRequest('Bad request: product could not be updated'))}
+
       // Getting product to return
       const product = await Product.findByPk(id)
       productsLog('Product updated...\n', product)
@@ -82,7 +83,7 @@ module.exports = () => {
 
 
   // DELETING A PRODUCT
-  // DELETE /api/products/delete:id
+  // DELETE /api/products/delete/:id
   router.delete('/delete/:id', [auth, admin], (req,res,next) => {
     productsLog(`[${req.method}] ${req.url}`)
     try {

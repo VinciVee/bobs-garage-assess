@@ -1,5 +1,5 @@
 // DATABASE
-// Import Sequelize - ORM package
+// Require Sequelize - ORM package
 const { Sequelize, DataTypes } = require('sequelize')
 const config = require('../config/config')
 

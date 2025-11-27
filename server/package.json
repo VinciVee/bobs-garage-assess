@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "dev": "cross-env DEBUG='app*' nodemon src/server.js",
     "server": "nodemon src/server.js",

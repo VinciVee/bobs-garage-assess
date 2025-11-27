@@ -42,11 +42,14 @@ module.exports = () => {
 
       if (!req.file) return next(ApiError.badRequest('No file uploaded'))
 
+      const BASE = process.env.BASE_URL
+      const fullpath = `${BASE.replace(/\/$/, "")}/${req.file.path.replace(/^\//, "")}`;
+      adminLog(`fullpath: ${fullpath}`)
       // Return info about the uploaded file
       res.json({
         message: 'File uploaded successfully',
         filename: req.file.filename,
-        path: req.file.path
+        path: fullpath,
       })
     } catch (error) {
       return next(ApiError.internal('Image could not be uploaded ...', error))

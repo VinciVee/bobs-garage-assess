@@ -1,7 +1,6 @@
 // Checks if token is present, and passes back messages aboutit
 
 // Modules
-const jwt = require('jsonwebtoken')
 const debugAuth = require('debug')('app:auth')
 // Utilities
 const apiError = require('../utilities/ApiError')
