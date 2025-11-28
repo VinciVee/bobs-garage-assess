@@ -16,7 +16,7 @@ const registerSchema = Joi.object({
     "string.alphanum": "Please enter a valid name",
   }),
   email: Joi.string()
-  .email({ minDomainSegments: 2, tlds: {allow: ['com', 'net', 'com.au', '.net.au']}})
+  .email({ minDomainSegments: 2, tlds: {allow: ['com', 'net', 'org', 'au']}})
   .trim().lowercase().required().messages({
     "string.empty": "Email is required",
     "string.email": "Please provide a valid email address",
@@ -34,7 +34,7 @@ const registerSchema = Joi.object({
 // Login
 const loginSchema = Joi.object({
   email: Joi.string()
-  .email({ minDomainSegments: 2, tlds: {allow: ['com', 'net', 'com.au', '.net.au']}})
+  .email({ minDomainSegments: 2, tlds: {allow: ['com', 'net', 'org', 'au']}})
   .trim().lowercase().required().messages({
     "string.empty": "Email is required",
   }),
@@ -103,7 +103,7 @@ const addUserSchema = Joi.object({
     "string.alphanum": "Please enter a valid name",
   }),
   email: Joi.string()
-  .email({ minDomainSegments: 2, tlds: {allow: ['com', 'net', 'com.au', '.net.au']}})
+  .email({ minDomainSegments: 2, tlds: {allow: ['com', 'net', 'org', 'au']}})
   .trim().lowercase().required().messages({
     "string.empty": "Email is required",
     "string.email": "Please provide a valid email address",
@@ -134,7 +134,7 @@ const updateUserSchema = Joi.object({
     "string.alphanum": "Please enter a valid name",
   }),
   email: Joi.string()
-  .email({ minDomainSegments: 2, tlds: {allow: ['com', 'net', 'com.au', '.net.au']}})
+  .email({ minDomainSegments: 2, tlds: {allow: ['com', 'net', 'org', 'au']}})
   .trim().lowercase().required().messages({
     "string.empty": "Email is required",
     "string.email": "Please provide a valid email address",

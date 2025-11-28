@@ -1,6 +1,5 @@
 const validate = (schema, source = "body") => {
   return (req, res, next) => {
-    const data = source === "params" ? req.params : req.body;
 
     const options = {
       abortEarly: false,  // return all errors
@@ -29,13 +28,6 @@ const validate = (schema, source = "body") => {
         error: "Validation failed",
         details: errors,
       });
-    }
-
-    // Replace req.body or req.params with validated and sanitized value
-    if (source === "params") {
-      req.params = value;
-    } else {
-      req.body = value;
     }
 
     next();
