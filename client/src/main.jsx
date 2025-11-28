@@ -16,17 +16,35 @@ import ErrorBoundary from './services/ErrorBoundary.jsx';
 
 // Global Styling
 import './styles/resets.css.js'
+import { lightTheme, darkTheme } from './styles/themes.css.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 // App component
 import App from './App.jsx';
 
-// Fetch from API if not in state
+// Fetch from API
+// Check if in state first
 const state = store.getState()
 if (!state.products.productList.length || state.products.productList[0] != null) { store.dispatch(fetchAllProducts()) }
+
 if (!state.users.userList.length || state.users.userList[0] != null) { store.dispatch(fetchUserList()) }
+
 if(!state.admin.imageList.length || state.admin.imageList[0] != null) { store.dispatch(fetchImageList()) }
+
+// save theme in localStorage
+function getInitialTheme(){
+  const savedTheme = localStorage.getItem('theme')
+  if (savedTheme === 'light' || savedTheme === 'dark' ) return savedTheme
+
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  return prefersDark ? 'dark' : 'light'
+}
+const initialTheme = getInitialTheme()
+document.body.classList.add(
+  initialTheme === 'dark' ? darkTheme : lightTheme
+)
+
 
 // save logged-in user in localStorage
 const token = localStorage.getItem('token')
@@ -41,7 +59,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <ErrorBoundary>
         <Provider store={store}>
-          <App />
+          <App initialTheme={initialTheme} />
         </Provider>
       </ErrorBoundary>
     </BrowserRouter>

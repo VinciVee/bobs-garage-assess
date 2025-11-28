@@ -9,14 +9,15 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { logout, getIsAuth, getIsAdmin } from '../../slices/auth/authSlice'
 // Local modules
+// import { darkTheme, lightTheme } from '../../styles/themes.css';
 import * as styles from './Header.css'
 
 
-const Header = ({ branding = "Bob&apos;s Garage" }) => {
+const Header = ({ branding = "Bob&apos;s Garage", theme, setTheme }) => {
   const dispatch = useDispatch()
   const isAdmin = useSelector(getIsAdmin)
   const isAuth = useSelector(getIsAuth)
-  const [darkMode, setDarkMode] = useState(true);
+  // const [isDarkTheme, setIsDarkTheme] = useState(true);
 
   const leave=(e)=>{
     console.log('Logout click, e: ', e.target)
@@ -25,7 +26,8 @@ const Header = ({ branding = "Bob&apos;s Garage" }) => {
 
   const handleClick=(e)=>{
     // SWITCH THEMES
-    setDarkMode(!darkMode)
+    setTheme(theme === 'light' ? 'dark' : 'light')
+    // setIsDarkTheme(!isDarkTheme)
   }
 
   // ADMIN DASHBOARD
@@ -73,7 +75,7 @@ const Header = ({ branding = "Bob&apos;s Garage" }) => {
               {/* THEME SWITCH */}
               <IconContext.Provider value={{ className: styles.themeIcons, size:'1.5em' }}>
                 <ToggleButton onClick={handleClick} className={styles.themeButton}>
-                  { darkMode
+                  { theme === 'dark'
                     ? <MdDarkMode />
                     : <MdLightMode /> }
                 </ToggleButton>

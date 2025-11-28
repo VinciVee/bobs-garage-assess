@@ -5,13 +5,13 @@ import Header from './Header'
 import Footer from './Footer'
 import Hero from './Hero';
 
-const Layout = () => {
+const Layout = ({theme, setTheme}) => {
   const { pathname } = useLocation()
   const showHero = pathname === "/"
 
   return (
     <div className={styles.app}>
-      <Header branding="Bob&apos;s Garage"/>
+      <Header branding="Bob&apos;s Garage" theme={theme} setTheme={setTheme}/>
       {showHero && <Hero />}
       {/* Wrap all content in column-direction flexbox */}
       <div className={styles.appContent}>
