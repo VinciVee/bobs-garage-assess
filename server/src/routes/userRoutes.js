@@ -9,9 +9,11 @@ const { User } = db.sequelize.models
 // Middleware
 const auth = require('../middleware/auth')
 const admin = require('../middleware/admin')
-// Utilities & Services
+const validate = require('../middleware/validate')
+// Utilities
 const ApiError = require('../utilities/ApiError')
 const { hashPassword } = require('../utilities/authServices')
+const { addUserSchema, updateUserSchema } = require('../utilities/authServices')
 // Router setup
 const router = express.Router()
 
@@ -37,7 +39,8 @@ module.exports = () => {
   // })
 
   // POST /api/users/add - add a new user
-  router.post('/add', [auth, admin], async(req,res,next) => {
+  router.post('/add', [auth, admin],
+    validate(addUserSchema), async(req,res,next) => {
     usersLog(`[${req.method}] ${req.url}`)
     const { firstName, lastName, email, image, password, isAdmin } = req.body
 
@@ -63,7 +66,8 @@ module.exports = () => {
 
 
   // PUT /api/users/edit/:id - edit a user
-  router.put('/edit/:id', [auth, admin], async(req,res,next) => {
+  router.put('/edit/:id', [auth, admin],
+    validate(updateUserSchema), async(req,res,next) => {
     usersLog(`[${req.method}] ${req.url}, body: ${JSON.stringify(req.body)}`)
     try {
       const id = Number(req.params.id)

@@ -2,12 +2,14 @@
 
 // Built-in & external modules
 const express = require('express')
-const authLog = require('debug')('app:authRoutes') // replaces console.log()
+const authLog = require('debug')('app:authRoutes')
 // Database models
 const db = require('../models')
 const { User } = db.sequelize.models
 // Middleware
 const auth = require('../middleware/auth')
+const validate = require('../middleware/validate')
+const { registerSchema, loginSchema } = require('../utilities/schemas')
 // Utilities
 const ApiError = require('../utilities/ApiError')
 const { findUser, hashPassword, jwtSignUser, comparePassword } = require('../utilities/authServices')
@@ -18,11 +20,12 @@ const router = express.Router()
 module.exports = () => {
   // REGISTER
   // POST /api/auth/register
-  router.post('/register', async(req,res,next) => {
-    authLog(`[${req.method}] ${req.url}`)
-    const { firstName, lastName, email, image, password } = req.body
-
+  router.post('/register', validate(registerSchema),
+    async (req,res,next) => {
     try {
+      authLog(`[${req.method}] ${req.url}`)
+      const { firstName, lastName, email, image, password } = req.body
+      // find user by email
       const user = await findUser(email)
 
       if(user !== null) return next(ApiError.badRequest('This email already exists'))
@@ -44,11 +47,11 @@ module.exports = () => {
 
   // LOGIN
   // POST /api/auth/log
-  router.post('/login', async(req,res,next) => {
-    authLog(`[${req.method}] ${req.url}`)
-    const { email, password } = req.body
-
+  router.post('/login', validate(loginSchema),
+    async (req,res,next) => {
     try {
+      authLog(`[${req.method}] ${req.url}`)
+      const { email, password } = req.body
 
       // Find user
       let user = await findUser(email)

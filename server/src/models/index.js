@@ -42,8 +42,6 @@ const User = sequelize.define('User',
 })
 
 // SEQUELIZE VARIABLES
-// Sequalize refers to library itself - gives access to class and methods
-// sequelize refers to an instance of Sequelize - represents connection to one database
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 

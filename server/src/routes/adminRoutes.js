@@ -7,12 +7,8 @@ const express = require('express')
 const adminLog = require('debug')('app:admin') // replaces console.log
 const fs = require('fs')
 const multer = require('multer')
-// Middleware
-const auth = require('../middleware/auth')
-const admin = require('../middleware/admin')
 // Utilities
 const ApiError = require('../utilities/ApiError')
-const { error } = require('console')
 
 // Router setup
 const router = express.Router()
@@ -30,13 +26,11 @@ const storage = multer.diskStorage({
 // Upload setup
 const upload = multer({ storage: storage })
 
-
 module.exports = () => {
   // UPLOAD IMAGE
   // POST /api/admin/uploadImage
-  router.post('/uploadImage',
-    upload.single('file'),
-    (req,res,next) => {
+  router.post('/uploadImage', upload.single('file'),
+  (req,res,next) => {
     try {
       adminLog(`[${req.method}] ${req.url}`)
 
