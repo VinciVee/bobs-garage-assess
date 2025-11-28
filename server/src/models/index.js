@@ -15,6 +15,7 @@ const sequelize = new Sequelize(
 )
 
 // MODELS
+// Product
 const Product = sequelize.define('Product',
   { id:{
       type: DataTypes.INTEGER,
@@ -27,6 +28,7 @@ const Product = sequelize.define('Product',
     price: { type: DataTypes.DECIMAL(8,2), allowNull: false }
 })
 
+// User
 const User = sequelize.define('User',
   { id:{
       type: DataTypes.INTEGER,
@@ -40,6 +42,32 @@ const User = sequelize.define('User',
     password: { type: DataTypes.STRING, allowNull: false },
     isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false }
 })
+
+// Profile - for user profiles - holds preferences and other info
+// Profile - UserUserId - foreign key
+const Profile = sequelize.define('Profile',
+  {
+    profileId:{
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    themePreference: {
+      type: DataTypes.STRING,
+      defaultValue: 'light',
+    },
+    favourites: {
+      type: DataTypes.JSON(DataTypes.INTEGER),
+      defaultValue: [],
+      allowNull: true,
+    },
+    bio: { type: DataTypes.STRING, allowNull: true },
+    role: { type: DataTypes.STRING, allowNull: true },
+  })
+
+// ASSOCIATIONS
+User.hasOne(Profile)
+Profile.belongsTo(User)
 
 // SEQUELIZE VARIABLES
 db.sequelize = sequelize
