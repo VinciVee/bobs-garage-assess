@@ -5,7 +5,7 @@ const express = require('express')
 const usersLog = require('debug')('app:users')
 // Database models
 const db = require('../models')
-const { User } = db.sequelize.models
+const { User, Profile } = db.sequelize.models
 // Middleware
 const auth = require('../middleware/auth')
 const admin = require('../middleware/admin')
@@ -18,12 +18,14 @@ const { addUserSchema, updateUserSchema } = require('../utilities/authServices')
 const router = express.Router()
 
 module.exports = () => {
-  // GET /api/users/ - get all users
+  // GET /api/users/
+  // Get all users
   router.get('/', async (req,res,next) => {
     usersLog(`[${req.method}] ${req.url}`)
     try {
       const options = {
-        attributes: { exclude: ['password']}
+        attributes: { exclude: ['password']},
+        include: Profile,
       }
       const userList = await User.findAll(options)
       res.send(userList)
@@ -38,8 +40,9 @@ module.exports = () => {
   //   console.log('/api/users/:id')
   // })
 
-  // POST /api/users/add - add a new user
-  router.post('/add', [auth, admin],
+  // POST /api/users/
+  // Add a new user
+  router.post('/', [auth, admin],
     validate(addUserSchema), async(req,res,next) => {
     usersLog(`[${req.method}] ${req.url}`)
     const { firstName, lastName, email, image, password, isAdmin } = req.body
@@ -65,8 +68,9 @@ module.exports = () => {
   })
 
 
-  // PUT /api/users/edit/:id - edit a user
-  router.put('/edit/:id', [auth, admin],
+  // PUT /api/users/:id
+  // Edit a user
+  router.put('/:id', [auth, admin],
     validate(updateUserSchema), async(req,res,next) => {
     usersLog(`[${req.method}] ${req.url}, body: ${JSON.stringify(req.body)}`)
     try {
@@ -76,19 +80,25 @@ module.exports = () => {
       }
       const { firstName, lastName, email, image, password, isAdmin } = req.body
 
-      let updatedUser = { firstName, lastName, email, image, password, isAdmin }
-
-      if(password) { updatedUser.password = await hashPassword(password) }
-      const response = await User.update(updatedUser,
-        { where: { id : id } })
-      usersLog('User Updated. sequelize res:\n', response)
+      let updatedUser = {
+        firstName,
+        lastName,
+        email,
+        image,
+        password: password ? await hashPassword(password) : password,
+        isAdmin
+      }
+      // if(password) updatedUser.password = await hashPassword(password)
+      const response = await User.update(updatedUser, { where: { id : id } })
 
       // Retrieve updated user from database to send as response
       const user = await User.findByPk(id)
+
       if (user === null) {
         return next(ApiError.badRequest('The item(s) you were looking for do not exist'))
       }
-      usersLog('sending back updated user: ', user)
+
+      usersLog('User Updated. Sending back user: ', user)
       res.status(200).send(user)
 
     } catch (error) {
@@ -97,8 +107,9 @@ module.exports = () => {
   })
 
 
-  // DELETE /api/users/delete/:id - delete user
-  router.delete('/delete/:id', [auth, admin], async(req,res,next) => {
+  // DELETE /api/users/:id
+  // delete user
+  router.delete('/:id', [auth, admin], async(req,res,next) => {
     usersLog(`[${req.method}] ${req.url}`)
     try {
       const id = Number(req.params.id)
@@ -110,6 +121,30 @@ module.exports = () => {
       res.send(`User ${id} deleted`)
     } catch (error) {
       return next(ApiError.internal('The item selected could not be deleted', error))
+    }
+  })
+
+
+  // PUT /api/users/profile/:id
+  // Edit user's profile - note: ':id' is user id.
+  router.put('/profile/:id', [auth, admin], async (req,res,next) => {
+    usersLog(`[${req.method}] ${req.url}, data: ${req.body}`)
+    try {
+      const userId = Number(req.params.id)
+
+      // Check if profile exists
+      const profile = await Profile.findOne({ where: { UserId : userId }})
+
+      if(!profile) {
+        return next(ApiError.badRequest('Item not found'))
+      }
+
+      // Update profile
+      const response = await profile.update(req.body)
+      usersLog(`Profile update response: ${response}`)
+      res.status(200).send(profile.toJSON())
+    } catch (error) {
+      return next(ApiError.internal('The item selected could not be updated', error))
     }
   })
 
