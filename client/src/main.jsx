@@ -16,9 +16,9 @@ import ErrorBoundary from './services/ErrorBoundary.jsx';
 
 // Global Styling
 import './styles/resets.css.js'
-import { lightTheme, darkTheme } from './styles/themes.css.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { darkTheme, lightTheme } from './styles/themes.css.js';
 
 // App component
 import App from './App.jsx';
@@ -32,23 +32,14 @@ if (!state.users.userList.length || state.users.userList[0] != null) { store.dis
 
 if(!state.admin.imageList.length || state.admin.imageList[0] != null) { store.dispatch(fetchImageList()) }
 
-// save theme in localStorage
-function getInitialTheme(){
-  const savedTheme = localStorage.getItem('theme')
-  if (savedTheme === 'light' || savedTheme === 'dark' ) return savedTheme
-
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  return prefersDark ? 'dark' : 'light'
-}
-const initialTheme = getInitialTheme()
-document.body.classList.add(
-  initialTheme === 'dark' ? darkTheme : lightTheme
-)
-
-
-// save logged-in user in localStorage
+// Check if user is logged-in
 const token = localStorage.getItem('token')
-if(token){ store.dispatch(loadUser()) }
+if(token) store.dispatch(loadUser())
+
+// Set theme
+const initialTheme = store.getState().theme.value;
+document.documentElement.classList
+  .add(initialTheme === 'dark' ? darkTheme : lightTheme);
 
 // save background in localStorage
 const backImage = localStorage.getItem('backImage')
@@ -59,7 +50,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <ErrorBoundary>
         <Provider store={store}>
-          <App initialTheme={initialTheme} />
+          <App />
         </Provider>
       </ErrorBoundary>
     </BrowserRouter>

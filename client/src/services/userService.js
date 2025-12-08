@@ -8,16 +8,16 @@ async function getAllUsers(){
 }
 
 // GET ONE USER Request
-async function getUserById(id){
-  const response = api.get(`/api/users/${id}`)
-  console.log('userService, response: ', response?.data)
-  return response
-}
+// async function getUserById(id){
+//   const response = api.get(`/api/users/${id}`)
+//   console.log('userService, response: ', response?.data)
+//   return response
+// }
 
 // ADD USER Request
 async function addUser(newUser){
   console.log('Sending request for new user:', JSON.stringify(newUser))
-  const response = await api.post('/api/users/add', newUser)
+  const response = await api.post('/api/users/', newUser)
   console.log('userService, response: ', response)
   return response
 }
@@ -25,24 +25,31 @@ async function addUser(newUser){
 // UPDATE USER Request
 async function updateUser(id, data){
   console.log('[userService] data: ', JSON.stringify(data))
-  const response = await api.put(`/api/users/edit/${id}`, data)
+  const response = await api.put(`/api/users/${id}`, data)
   console.log('userService, response: ', response?.data)
   return response.data
 }
 
 // DELETE USER Request
 async function deleteUser(id){
-  const response = await api.delete(`/api/users/delete/${id}`)
+  const response = await api.delete(`/api/users/${id}`)
   console.log('userService, response: ', response?.data)
+  return response
+}
+
+// UPDATE USER PROFILE
+async function updateProfile(){
+  const response = await api.put(`/api/profile`)
+  console.log('Updated user: ', response?.data)
   return response
 }
 
 const userService = {
   getAllUsers,
-  getUserById,
   addUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  updateProfile,
 }
 
 export default userService

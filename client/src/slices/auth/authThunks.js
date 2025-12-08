@@ -35,12 +35,13 @@ export const login = createAsyncThunk(
     console.log('[authSlice] Logging in...')
     try {
       const response = await authService.login({ email, password })
+      const userInfo = response.data
 
-      if(response.data){
+      if(userInfo){
         if(response.status === 400){
-          throw Error({ message: response.data })
+          throw Error({ message: userInfo })
         }
-        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('token', userInfo.token)
         // setAuthToken(localStorage.token)
         // Get logged-in user's details
         const res = await authService.loadUser()
@@ -56,9 +57,11 @@ export const login = createAsyncThunk(
 export const loadUser = createAsyncThunk(
   'auth/loadUser', async (_, thunkAPI) => {
     try {
-      // setAuthToken(localStorage.token)
       const response = await authService.loadUser()
-      console.log('loadUser (authSlice) response: ',response.data)
+      const userInfo = response.data
+      console.log('loadUser (authSlice) response: ', userInfo)
+
+      localStorage.setItem('theme', userInfo.themePreference)
       return response.data
 
     } catch (error) {

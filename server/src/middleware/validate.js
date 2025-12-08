@@ -1,5 +1,6 @@
-const validate = (schema, source = "body") => {
+const validate = (schema) => {
   return (req, res, next) => {
+    const data = req.body
 
     const options = {
       abortEarly: false,  // return all errors

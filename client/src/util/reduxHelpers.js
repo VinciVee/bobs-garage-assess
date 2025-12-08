@@ -1,6 +1,8 @@
 // Helpers used in redux state slices
 // mutating is fine within Redux (immer)
 
+import { darkTheme, lightTheme } from "../styles/themes.css"
+
 export const handlePending = (state, action) => {
   // mutating is fine within Redux (immer)
   state.status = 'loading'
@@ -29,4 +31,13 @@ export const updateList = (list, updatedItem) => {
    })
 
    return updatedList
+}
+
+// Apply chosen theme to index.html and stores it
+export const applyTheme = (chosenTheme) => {
+  // Note: darkTheme and lightTheme are class names generated at runtime - we don't know the exact string used
+  const theme = chosenTheme === 'dark' ? darkTheme : lightTheme
+  localStorage.setItem('theme', chosenTheme)
+  document.documentElement.classList.remove(darkTheme, lightTheme)
+  document.documentElement.classList.add(theme)
 }

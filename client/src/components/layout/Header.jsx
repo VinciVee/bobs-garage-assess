@@ -5,19 +5,19 @@ import { IconContext } from 'react-icons/lib'
 import { MdDarkMode, MdLightMode  } from "react-icons/md";
 import { Container, DropdownButton, Nav, Navbar, NavDropdown, ToggleButton } from 'react-bootstrap';
 // Redux modules
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { logout, getIsAuth, getIsAdmin } from '../../slices/auth/authSlice'
+import { getTheme, toggleTheme } from '../../slices/themeSlice';
 // Local modules
-// import { darkTheme, lightTheme } from '../../styles/themes.css';
+import userService from '../../services/userService'
 import * as styles from './Header.css'
 
 
-const Header = ({ branding = "Bob&apos;s Garage", theme, setTheme }) => {
+const Header = ({ branding = "Bob&apos;s Garage"}) => {
   const dispatch = useDispatch()
   const isAdmin = useSelector(getIsAdmin)
   const isAuth = useSelector(getIsAuth)
-  // const [isDarkTheme, setIsDarkTheme] = useState(true);
+  const theme = useSelector(getTheme)
 
   const leave=(e)=>{
     console.log('Logout click, e: ', e.target)
@@ -26,8 +26,8 @@ const Header = ({ branding = "Bob&apos;s Garage", theme, setTheme }) => {
 
   const handleClick=(e)=>{
     // SWITCH THEMES
-    setTheme(theme === 'light' ? 'dark' : 'light')
-    // setIsDarkTheme(!isDarkTheme)
+    dispatch(toggleTheme())
+    userService.updateProfile({ themePreference: theme })
   }
 
   // ADMIN DASHBOARD

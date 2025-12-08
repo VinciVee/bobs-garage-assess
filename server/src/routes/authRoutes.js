@@ -1,11 +1,14 @@
-// Routes for authentication
-
+/**
+ * Routes for authentication
+ *
+ *
+ * */
 // Built-in & external modules
 const express = require('express')
 const authLog = require('debug')('app:authRoutes')
 // Database models
 const db = require('../models')
-const { User } = db.sequelize.models
+const { User, Profile } = db.sequelize.models
 // Middleware
 const auth = require('../middleware/auth')
 const validate = require('../middleware/validate')
@@ -61,7 +64,10 @@ module.exports = () => {
 
       if(!isMatch) return next(ApiError.badRequest('Incorrect email or password'))
 
-      res.send({ token: jwtSignUser(user) })
+      res.send({
+        token: jwtSignUser(user),
+      })
+
     } catch (error) {
       return next(ApiError.internal('Your profile could not be logged in at this time ...', error))
     }
@@ -70,10 +76,15 @@ module.exports = () => {
 
   // GET LOGGED IN USER
   // GET /api/auth/
-  router.get('/', auth,
-    async(req,res,next) => {
+  // Token is passed through the headers and is checked by 'auth'
+  router.get('/', auth, async(req,res,next) => {
     authLog(`[${req.method}] ${req.url}, user id:${req.user.id}`)
-    const options = { attributes: {exclude: ['password']} }
+    const options = {
+      attributes: {
+        exclude: ['password']
+      },
+      include: Profile,
+    }
 
     try {
       if(req.user.id === null) return next(ApiError.badRequest('No token provided'))

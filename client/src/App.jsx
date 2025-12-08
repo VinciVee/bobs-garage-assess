@@ -20,20 +20,11 @@ import EditUser from './pages/admin/EditUser';
 // Components
 import Layout from './components/layout/Layout';
 
-function App({ initialTheme }) {
-  const [theme, setTheme] = useState(initialTheme)
-
-  // Sync DOM + localStorage whenever theme changes
-  useEffect(() => {
-    document.body.classList.remove(theme === 'light' ? darkTheme : lightTheme)
-    document.body.classList.add(theme === 'dark' ? darkTheme : lightTheme)
-
-    localStorage.setItem('theme', theme)
-  }, [theme])
+function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Layout theme={theme} setTheme={setTheme}/>}>
+      <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path='about' element={<About />} />
 

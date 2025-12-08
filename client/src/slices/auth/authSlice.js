@@ -10,6 +10,8 @@ const initialState = {
   token: '',
   isAuth: false,
   isAdmin: false,
+  themePreference: '',
+  favourites: [],
   status: 'idle', // idle, loading, succeeded, failed
   error: null
 }
@@ -36,13 +38,20 @@ const authSlice = createSlice({
     // LOGIN
     .addCase(login.pending, handlePending)
     .addCase(login.fulfilled, (state, action) => {
-      if(!action.payload) return payloadError(state, "... [login]")
-      console.log('(AuthSlice - login payload: ', action.payload.isAdmin)
+      const user = action.payload
+
+      if(!user) return payloadError(state, "... [login]")
+      localStorage.setItem('theme', user.Profile.themePreference)
+      localStorage.setItem('favourites', user.Profile.favourites)
+
+      console.log('(AuthSlice - login payload: ', user)
       state.status = 'succeeded'
       state.isAuth = true
-      state.isAdmin = action.payload.isAdmin
+      state.isAdmin = user.isAdmin
       state.token = localStorage.getItem('token')
-      state.user = action.payload
+      state.themePreference = localStorage.getItem('theme')
+      state.favourites = localStorage.getItem('favourites')
+      state.user = user
       state.error = null
     })
     .addCase(login.rejected, (state, action) => {
@@ -50,6 +59,8 @@ const authSlice = createSlice({
       state.isAuth = false
       state.isAdmin = false
       state.token = null
+      state.themePreference = ''
+      state.favourites = null
       state.user = null
       state.error = action.payload
     })
@@ -57,13 +68,20 @@ const authSlice = createSlice({
     // LOAD USER
     .addCase(loadUser.pending, handlePending)
     .addCase(loadUser.fulfilled, (state, action) => {
-      if(!action.payload) return payloadError(state, "loaded")
+      const user = action.payload
 
-      console.log('(AuthSlice - LoadUser payload: ', action.payload.isAdmin)
+      if(!user) return payloadError(state, "loaded")
+      localStorage.setItem('theme', user.Profile.themePreference)
+      localStorage.setItem('favourites', user.Profile.favourites)
+
+      console.log('(AuthSlice - LoadUser payload: ', user)
       state.status = 'succeeded'
       state.isAuth = true
-      state.isAdmin = action.payload.isAdmin || false
-      state.user = action.payload
+      state.isAdmin = user.isAdmin || false
+      state.token = localStorage.getItem('token')
+      state.themePreference = localStorage.getItem('theme')
+      state.favourites = localStorage.getItem('favourites')
+      state.user = user
       state.error = null
     })
     .addCase(loadUser.rejected, (state, action) => {
@@ -91,6 +109,8 @@ const authSlice = createSlice({
       state.isAuth = false
       state.isAdmin = false
       state.token = null
+      state.themePreference = ''
+      state.favourites = null
       state.user = null
       state.error = action.payload
     })
@@ -100,6 +120,7 @@ const authSlice = createSlice({
 export const getIsAuth = (state) => state.auth.isAuth
 export const getIsAdmin = (state) => state.auth.isAdmin
 export const getAuthUser = (state) => state.auth.user
+export const getUserTheme = (state) => state.auth.themePreference
 export const getError = (state) => state.auth.error
 
 // Export authSlice actions

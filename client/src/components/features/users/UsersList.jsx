@@ -1,11 +1,9 @@
-// import useSelector
 import { useSelector, useDispatch } from "react-redux"
-// import selectAllUsers
 import { getUserStatus, selectAllUsers } from '../../../slices/users/userSlice'
 import { deleteUser, fetchUserList } from "../../../slices/users/userThunks"
+import { useEffect } from "react"
 import { Navigate } from "react-router"
 import UserItem from './UserItem'
-import { useEffect } from "react"
 
 function UsersList() {
   // Redux hooks

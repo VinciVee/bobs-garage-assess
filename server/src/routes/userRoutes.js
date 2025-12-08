@@ -124,29 +124,5 @@ module.exports = () => {
     }
   })
 
-
-  // PUT /api/users/profile/:id
-  // Edit user's profile - note: ':id' is user id.
-  router.put('/profile/:id', [auth, admin], async (req,res,next) => {
-    usersLog(`[${req.method}] ${req.url}, data: ${req.body}`)
-    try {
-      const userId = Number(req.params.id)
-
-      // Check if profile exists
-      const profile = await Profile.findOne({ where: { UserId : userId }})
-
-      if(!profile) {
-        return next(ApiError.badRequest('Item not found'))
-      }
-
-      // Update profile
-      const response = await profile.update(req.body)
-      usersLog(`Profile update response: ${response}`)
-      res.status(200).send(profile.toJSON())
-    } catch (error) {
-      return next(ApiError.internal('The item selected could not be updated', error))
-    }
-  })
-
   return router
 }

@@ -7,6 +7,7 @@ const authRoutes = require('./authRoutes')
 const productRoutes = require('./productRoutes')
 const userRoutes = require('./userRoutes')
 const adminRoutes = require('./adminRoutes')
+const profileRoutes = require('./profileRoutes')
 
 // Endpoints for "/" path
 module.exports = () => {
@@ -16,14 +17,17 @@ module.exports = () => {
     res.send("Welcome to Bob's Garage 👨‍🔧")
   })
 
-  // PRODUCT /api/product
+  // PRODUCT /api/products
   router.use('/products', productRoutes())
 
   // AUTH /api/auth
   router.use('/auth', authRoutes())
 
-  // USER /api/user
+  // USER /api/users
   router.use('/users', userRoutes())
+
+  // PROFILE /api/profile
+  router.use('/profile', profileRoutes())
 
   // ADMIN /api/admin
   router.use('/admin', adminRoutes())
