@@ -8,7 +8,8 @@ import BgButton from '../common/BgButton';
 import * as styles from './Hero.css'
 
 function Hero() {
-  const backImage = useSelector(selectHomepageImage)
+  const defaultImage = 'http://localhost:3001/uploads/kenny-eliason-2K_-PG95qlI-unsplash.webp'
+  const backImage = useSelector(selectHomepageImage) || defaultImage
   console.log('backImage: ', backImage)
 
   return (

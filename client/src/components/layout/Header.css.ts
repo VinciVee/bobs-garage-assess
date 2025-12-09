@@ -12,7 +12,7 @@ export const headerLayout = style({
 
 export const navCollapse = style({
   display: "flex",
-  flexFlow: "row no-wrap",
+  flexFlow: "row nowrap",
   alignItems: "center",
   justifyContent: "flex-end",
   gap: vars.space["1x"]

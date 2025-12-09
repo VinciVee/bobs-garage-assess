@@ -1,5 +1,6 @@
 const validate = (schema) => {
   return (req, res, next) => {
+    console.log('validating...', req.body)
     const data = req.body
 
     const options = {
@@ -16,6 +17,8 @@ const validate = (schema) => {
         sanitizedData[key] = val === "" ? undefined : val;
       }
     }
+
+    console.log('sanitize data: ', sanitizedData)
 
     const { error, value } = schema.validate(sanitizedData, options);
 

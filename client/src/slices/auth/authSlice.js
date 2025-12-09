@@ -41,16 +41,19 @@ const authSlice = createSlice({
       const user = action.payload
 
       if(!user) return payloadError(state, "... [login]")
-      localStorage.setItem('theme', user.Profile.themePreference)
-      localStorage.setItem('favourites', user.Profile.favourites)
+
+      if(user.Profile) {
+        localStorage.setItem('theme', user.Profile.themePreference)
+        localStorage.setItem('favourites', user.Profile.favourites)
+        state.themePreference = localStorage.getItem('theme')
+        state.favourites = localStorage.getItem('favourites')
+      }
 
       console.log('(AuthSlice - login payload: ', user)
       state.status = 'succeeded'
       state.isAuth = true
       state.isAdmin = user.isAdmin
       state.token = localStorage.getItem('token')
-      state.themePreference = localStorage.getItem('theme')
-      state.favourites = localStorage.getItem('favourites')
       state.user = user
       state.error = null
     })
@@ -71,16 +74,18 @@ const authSlice = createSlice({
       const user = action.payload
 
       if(!user) return payloadError(state, "loaded")
-      localStorage.setItem('theme', user.Profile.themePreference)
-      localStorage.setItem('favourites', user.Profile.favourites)
+      if(user.Profile) {
+        localStorage.setItem('theme', user.Profile.themePreference)
+        localStorage.setItem('favourites', user.Profile.favourites)
+        state.themePreference = localStorage.getItem('theme')
+        state.favourites = localStorage.getItem('favourites')
+      }
 
       console.log('(AuthSlice - LoadUser payload: ', user)
       state.status = 'succeeded'
       state.isAuth = true
       state.isAdmin = user.isAdmin || false
       state.token = localStorage.getItem('token')
-      state.themePreference = localStorage.getItem('theme')
-      state.favourites = localStorage.getItem('favourites')
       state.user = user
       state.error = null
     })

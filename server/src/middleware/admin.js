@@ -1,4 +1,5 @@
 // Middleware to test for admin users
+const ApiError = require('../utilities/ApiError')
 
 function admin(req,res,next){
   console.log('Admin middleware, isAdmin: ', req.user.isAdmin)

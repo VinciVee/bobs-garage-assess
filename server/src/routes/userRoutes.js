@@ -84,7 +84,7 @@ module.exports = () => {
         firstName,
         lastName,
         email,
-        image,
+        image: 'http://localhost:3001/' + image,
         password: password ? await hashPassword(password) : password,
         isAdmin
       }

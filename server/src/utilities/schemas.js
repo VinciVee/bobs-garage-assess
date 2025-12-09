@@ -3,7 +3,7 @@ const Joi = require('joi')
 // AUTHENTICATION SCHEMA
 // Register
 const registerSchema = Joi.object({
-  firstName: Joi.string().min(3).max(50).alphanum().trim().required().messages({
+  firstName: Joi.string().min(3).max(50).trim().required().messages({
     "string.empty": "First name is required",
     "string.min": "First name must be at least 3 characters",
     "string.max": "First name must not exceed 50 characters",
@@ -21,7 +21,7 @@ const registerSchema = Joi.object({
     "string.empty": "Email is required",
     "string.email": "Please provide a valid email address",
   }),
-  image: Joi.string().min(10).max(100).trim().lowercase().required().messages({
+  image: Joi.string().min(10).max(100).trim().lowercase().messages({
     "string.empty": "Image URL (provided or placeholder) is missing",
     "string.max": "Image URL exceeds number of characters",
   }),
@@ -47,16 +47,16 @@ const loginSchema = Joi.object({
 // PRODUCTS VALIDATION SCHEMAS
 // Add a service
 const addServiceSchema = Joi.object({
-  name: Joi.string().min(3).max(200).alphanum().trim().required().messages({
+  name: Joi.string().min(3).max(200).trim().required().messages({
     "string.empty": "Service name is required",
     "string.min": "Service name must be at least 3 characters",
     "string.max": "Service name must not exceed 200 characters",
   }),
-  description: Joi.string().min(10).alphanum().trim().required().messages({
+  desc: Joi.string().min(3).trim().required().messages({
     "string.empty": "Service description is required",
     "string.min": "The description must be at least 10 characters",
   }),
-  image: Joi.string().min(10).max(100).trim().required().messages({
+  image: Joi.string().min(10).max(100).trim().optional().messages({
     "string.empty": "Image URL (provided or placeholder) is missing",
     "string.max": "Image URL exceeds number of characters",
   }),
@@ -69,11 +69,11 @@ const addServiceSchema = Joi.object({
 
 // Edit a service
 const updateServiceSchema = Joi.object({
-  name: Joi.string().min(3).max(200).alphanum().trim().optional().messages({
+  name: Joi.string().min(3).max(200).trim().optional().messages({
     "string.min": "Service name must be at least 3 characters",
     "string.max": "Service name must not exceed 200 characters",
   }),
-  description: Joi.string().min(10).alphanum().trim().optional().messages({
+  desc: Joi.string().min(3).trim().optional().messages({
     "string.min": "Description must be at least 10 characters",
   }),
   image: Joi.string().min(10).max(100).trim().optional().messages({
@@ -90,7 +90,7 @@ const updateServiceSchema = Joi.object({
 // USER VALIDATION SCHEMAS
 // add user
 const addUserSchema = Joi.object({
-  firstName: Joi.string().min(3).max(50).alphanum().trim().required().messages({
+  firstName: Joi.string().min(3).max(50).trim().required().messages({
     "string.empty": "First name is required",
     "string.min": "First name must be at least 3 characters",
     "string.max": "First name must not exceed 50 characters",
@@ -121,7 +121,7 @@ const addUserSchema = Joi.object({
 
 // update user
 const updateUserSchema = Joi.object({
-  firstName: Joi.string().min(3).max(50).alphanum().trim().required().messages({
+  firstName: Joi.string().min(3).max(50).trim().required().messages({
     "string.empty": "First name is required",
     "string.min": "First name must be at least 3 characters",
     "string.max": "First name must not exceed 50 characters",

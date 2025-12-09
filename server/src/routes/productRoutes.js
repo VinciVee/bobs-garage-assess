@@ -111,7 +111,11 @@ module.exports = () => {
 
       // Add new product - Id is added by database
       const product = await Product.create({
-        name, desc, image, price })
+        name,
+        desc,
+        image,
+        price
+      })
 
       productsLog('New product:\n', product.toJSON())
       res.status(201).send(product)

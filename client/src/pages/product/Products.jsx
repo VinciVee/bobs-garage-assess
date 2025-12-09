@@ -50,7 +50,7 @@ const Products = () => {
 
   return (
     <>
-      <h2>Our's Services</h2>
+      <h2>Our Services</h2>
       <div className="row">
         {content}
       </div>
