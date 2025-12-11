@@ -87,7 +87,7 @@ export const { setStatus } = productSlice.actions;
 // note: state.'product'.... refers to 'product' in store.js
 export const selectAllProducts = (state) => state.products.productList
 export const productSliceStatus = (state) => state.products.status
-export const getProductError = (state) => state.products.errors
+export const getProductError = (state) => state.products.error
 export const selectProductById = (state, id) => state.products.productList.find(item => item.id === id)
 
 

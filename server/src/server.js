@@ -31,7 +31,7 @@ app.use('/uploads', express.static('uploads'))
 
 // Default middleware for parsing
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 // Express endpoints
 app.use('/api', routes())

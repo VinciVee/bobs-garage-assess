@@ -4,7 +4,7 @@
  *
  */
 // React Hooks
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 // Redux modules
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,8 +36,40 @@ const EditProduct = () => {
     price: '',
     errors: {}
   })
+
+  const effectRan = useRef(false)
   useEffect(() => {
-    if(updatedStatus==="idle" || !loading) {
+    if(effectRan.current === false) {
+      getProduct()
+      setLoading(false)
+
+      // Clean-up function
+      return () => {
+        effectRan.current = true
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productId])
+
+  // useEffect(() => {
+  //   if(updatedStatus==="idle" || !loading) {
+  //     if (product.name != null && product != null) {
+  //       console.log('setting form data')
+  //       setFormData({
+  //         name: product.name,
+  //         desc: product.desc,
+  //         image: product.image,
+  //         price: product.price,
+  //         errors: {}
+  //       })
+  //     } else if (status === 'idle') {
+  //       dispatch(fetchProduct(productId))
+  //     }
+  //   }
+  // }, [product, dispatch, productId, status, updatedStatus, loading])
+  async function getProduct() {
+    try {
+      dispatch(fetchProduct(productId))
       if (product.name != null && product != null) {
         console.log('setting form data')
         setFormData({
@@ -47,11 +79,11 @@ const EditProduct = () => {
           price: product.price,
           errors: {}
         })
-      } else if (status === 'idle') {
-        dispatch(fetchProduct(productId))
       }
+    } catch (error) {
+      console.log(error?.response)
     }
-  }, [product, dispatch, productId, status, updatedStatus, loading])
+  }
 
   const {name, desc, image, price} = formData;
   const defaultImage = '/assets/Service_Placeholder.png'

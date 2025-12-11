@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Products.jsx
 
 import ProductsList from '../../components/features/products/ProductsList';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAllProducts, getProductError, productSliceStatus, setStatus } from '../../slices/products/productSlice'
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { fetchAllProducts } from '../../slices/products/productThunks';
 
 const Products = () => {
@@ -12,8 +13,7 @@ const Products = () => {
   const productsList = useSelector(selectAllProducts)
   const status = useSelector(productSliceStatus)
   const error = useSelector(getProductError)
-
-  let content;
+  // dispatch(setStatus('idle'))
 
   const loadingContent = ( <p>Loading...</p> )
 
@@ -21,18 +21,26 @@ const Products = () => {
 
   const succeededContent = (<div><ProductsList productsList={productsList} /></div> )
 
-
-  // If productsList are not showing
+  const effectRan = useRef(false)
   useEffect(() => {
-    if (productsList[0] != null && status === 'idle') {
-      try {
-        dispatch(fetchAllProducts())
-      } catch (error) {
-        console.log('Error while fetching all products: ', error.message)
+    if (effectRan.current === false) {
+      getProduct()
+      // dispatch(setStatus('succeeded'))
+      return ()=>{
+        effectRan.current = true
       }
     }
-  }, [status, dispatch, productsList])
+  }, [])
 
+  async function getProduct() {
+    try {
+      dispatch(fetchAllProducts())
+    } catch (error) {
+      console.log('Error while fetching all products: ', error.message)
+    }
+  }
+
+  let content;
 
   console.log('Products.jsx - loading products:\n', productsList )
   switch(status){

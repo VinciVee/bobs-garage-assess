@@ -3,14 +3,17 @@
  * Creates a store to hold the states
  *
  */
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, createListenerMiddleware } from '@reduxjs/toolkit'
 import themeReducer from '../slices/themeSlice'
 import productReducer from '../slices/products/productSlice'
 import authReducer from '../slices/auth/authSlice'
 import userReducer from '../slices/users/userSlice'
 import adminReducer from '../slices/admin/adminSlice'
+import { productsApi } from '../slices/products/productApi'
 
 import { darkTheme, lightTheme } from '../styles/themes.css'
+
+// const listenerMiddleware = createListenerMiddleware()
 
 export const store = configureStore({
   reducer: {
@@ -19,10 +22,11 @@ export const store = configureStore({
     auth: authReducer,
     users: userReducer,
     admin: adminReducer,
+    [productsApi.reducerPath]: productsApi.reducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(),
   devTools: true,
 })
-
 
 // THEME SUBSCRIBER
 function applyThemeToDom(theme) {
