@@ -16,20 +16,20 @@ async function getProductById(id){
 
 // ADD PRODUCT Request
 async function addProduct(data){
-  const response =  await api.post('/api/products/add', data)
+  const response =  await api.post('/api/products/', data)
   console.log(response?.data)
   return response
 }
 
 // UPDATE PRODUCT Request
 async function updateProduct(id, data){
-  const response =  await api.put(`/api/products/edit/${id}`, data)
+  const response =  await api.put(`/api/products/${id}`, data)
   return response
 }
 
 // DELETE PRODUCT Request
 async function deleteProduct(id){
-  const response =  await api.delete(`/api/products/delete/${id}`)
+  const response =  await api.delete(`/api/products/${id}`)
   console.log(response?.data)
   return response
 }

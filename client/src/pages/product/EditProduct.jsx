@@ -4,143 +4,108 @@
  *
  */
 // React Hooks
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 // Redux modules
-import { useDispatch, useSelector } from 'react-redux';
-import { selectProductById, productSliceStatus, getProductError, setStatus } from '../../slices/products/productSlice'
-import { updateProduct, fetchProduct } from '../../slices/products/productThunks';
+import { useGetProductQuery, useEditProductMutation } from '../../services/productsApi';
 // Local components
 import BgCard from '../../components/common/BgCard'
 import ProductForm from '../../components/features/forms/ProductForm';
-import adminService from '../../services/adminService';
-
 
 const EditProduct = () => {
   const { id } = useParams();
-  const productId = Number(id);
-  // Set Selectors
-  const product = useSelector((state) => selectProductById(state, productId))
-  const status = useSelector(productSliceStatus)
-  const error = useSelector(getProductError)
-  // Hooks to use later
+  const prodId = Number(id);
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  // Other Status
-  const [updatedStatus, setUpdatedStatus] = useState("idle")
-  const [loading, setLoading] = useState(false)
+  const [isDisabled, setIsDisabled] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     desc: '',
     image: '',
-    price: '',
+    price: 0,
     errors: {}
   })
 
-  const effectRan = useRef(false)
+  const {
+    data: product,
+    isLoading: isLoadingFetch,
+    isError: isFetchError,
+    error: fetchError
+    // skip disables fetch if prodId is invalid
+  } = useGetProductQuery(prodId, { skip: !prodId })
+
+  // setFormData to product
+  // useCallBack
   useEffect(() => {
-    if(effectRan.current === false) {
-      getProduct()
-      setLoading(false)
-
-      // Clean-up function
-      return () => {
-        effectRan.current = true
-      }
+    if (product) {
+      setFormData({
+        name: product.name ?? '',
+        desc: product.desc ?? '',
+        image: product.image ?? '',
+        price: product.price ?? 0,
+        errors: {}
+      })
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productId])
+  }, [product])
 
-  // useEffect(() => {
-  //   if(updatedStatus==="idle" || !loading) {
-  //     if (product.name != null && product != null) {
-  //       console.log('setting form data')
-  //       setFormData({
-  //         name: product.name,
-  //         desc: product.desc,
-  //         image: product.image,
-  //         price: product.price,
-  //         errors: {}
-  //       })
-  //     } else if (status === 'idle') {
-  //       dispatch(fetchProduct(productId))
-  //     }
-  //   }
-  // }, [product, dispatch, productId, status, updatedStatus, loading])
-  async function getProduct() {
-    try {
-      dispatch(fetchProduct(productId))
-      if (product.name != null && product != null) {
-        console.log('setting form data')
-        setFormData({
-          name: product.name,
-          desc: product.desc,
-          image: product.image,
-          price: product.price,
-          errors: {}
-        })
-      }
-    } catch (error) {
-      console.log(error?.response)
-    }
-  }
+  const [ editProduct, {
+    isLoading: isLoadingUpdate,
+    isError: isUpdateError,
+    error: updateError,
+    isSuccess: isUpdateSuccess
+  }] = useEditProductMutation()
 
   const {name, desc, image, price} = formData;
-  const defaultImage = '/assets/Service_Placeholder.png'
 
 
-  // onChange event handler
-  const handleChange = (e) => {
-    const {name, type, value, checked, files} = e.target
+  // Sets form states before onClick event
+  // event: user typing in form fields
+  const handleTextChange = (e) => {
+    const {name, type, value, checked} = e.target
+
     setFormData((prev) => ({
       ...prev,
-      // Checking value type before setting formData
-      [name]: type === "checkbox" ? checked :
-      type === "file" ? files[0] : value
+      [name]: type === "checkbox" ? checked : value
     }))
+  }
+
+  // Handles change in image field
+  // event: user uploads an image
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    setFormData({ ...formData, image: file })
   }
 
   // onSubmit event handler
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setUpdatedStatus("loading")
-    setLoading(true)
-    // Client-side validation - Check for errors
-    // TBD
+    setIsDisabled(true)
+    console.log('Updating Service ', prodId )
 
-    console.log('Updating Service ', productId )
+    // Send updated product details as type FormData
+    const productData = new FormData()
+    productData.append('name', name)
+    productData.append('desc', desc)
+    productData.append('price', price)
+    if (image instanceof File) {
+      productData.append('image', image)
+    }
 
-    // DISPATCH USER
+    console.log('productData: ', productData)
+    console.log('image: ', image)
+
+    // SEND UPDATED PRODUCT
     try {
-      const fileData = new FormData()
-      let url = defaultImage
-      // Uploading image if present
-      if(image instanceof File) {
-        fileData.append('file', image)
-        const res = await adminService.uploadImage(fileData)
-        console.log('res before url:', JSON.stringify(res))
-        if(res.path != null) {url = res.path}
-      }
-      // If image was not changed
-      if (image != null) { url = image }
-      console.log(`default: ${defaultImage}, image: ${image}, url: ${url}`)
+      await editProduct({
+        prodId: prodId,
+        productData: productData,
+      }).unwrap()
+      navigate('/products')
 
-      // Send updated product
-      dispatch(updateProduct({
-        id: productId,
-        data: {
-          name,
-          desc,
-          image: url,
-          price }})).unwrap()
-    } catch (error) {
-      console.log('Failed to update service', error)
+    } catch (err) {
+      console.log('Failed to update service', err)
     } finally {
       console.log('reached finally, status')
-      dispatch(setStatus("idle"))
-      setUpdatedStatus("succeeded")
-      setTimeout(()=>{setLoading(false)}, 3000)
-      navigate('/products')
+      setTimeout(()=>{setIsDisabled(false)}, 3000)
     }
   }
 
@@ -155,8 +120,10 @@ const EditProduct = () => {
         <ProductForm
           formData={formData}
           handleSubmit={handleSubmit}
-          handleChange={handleChange}
-          loading={loading}
+          handleTextChange={handleTextChange}
+          handleFileChange={handleFileChange}
+          loading={isLoadingUpdate || isLoadingFetch}
+          disabled={isDisabled}
         />
       </BgCard>
     </div>

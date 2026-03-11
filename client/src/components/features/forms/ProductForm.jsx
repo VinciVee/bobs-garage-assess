@@ -11,7 +11,7 @@ import BgButton from "../../common/BgButton";
 // react* modules
 import { Form, Spinner } from "react-bootstrap";
 
-function ProductForm({formData, handleSubmit, handleChange, loading}) {
+function ProductForm({formData, handleSubmit, handleTextChange, handleFileChange, loading, disabled}) {
   const {name, desc, image, price, errors} = formData
 
   return (
@@ -23,7 +23,7 @@ function ProductForm({formData, handleSubmit, handleChange, loading}) {
         type="text"
         value={name}
         placeholder="Service name"
-        handleChange={handleChange}
+        handleChange={handleTextChange}
         error={errors.name}
       />
       {/* DESCRIPTION */}
@@ -33,14 +33,14 @@ function ProductForm({formData, handleSubmit, handleChange, loading}) {
         type="text"
         value={desc}
         placeholder="First name"
-        handleChange={handleChange}
+        handleChange={handleTextChange}
         error={errors.desc}
       />
       {/* IMAGE */}
       <UploadImage
         label="Upload an image*"
         name="image"
-        handleChange={handleChange}
+        handleChange={handleFileChange}
         error={errors.image}
       />
       {/* PRICE */}
@@ -50,12 +50,16 @@ function ProductForm({formData, handleSubmit, handleChange, loading}) {
         type="text"
         value={price}
         placeholder="0.00"
-        handleChange={handleChange}
+        handleChange={handleTextChange}
         error={errors.price}
       />
       {/* SUBMIT BUTTON */}
       <BgButton loadingState={loading} type="submit">
-        {loading ? <Spinner animation="border" variant="light" /> : 'Submit'}
+        {
+          loading || disabled
+          ? <Spinner animation="border" variant="light" />
+          : 'Submit'
+        }
       </BgButton>
     </Form>
   )

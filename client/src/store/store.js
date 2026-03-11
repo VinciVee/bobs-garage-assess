@@ -9,7 +9,7 @@ import productReducer from '../slices/products/productSlice'
 import authReducer from '../slices/auth/authSlice'
 import userReducer from '../slices/users/userSlice'
 import adminReducer from '../slices/admin/adminSlice'
-import { productsApi } from '../slices/products/productApi'
+import { productsApi } from '../services/productsApi'
 
 import { darkTheme, lightTheme } from '../styles/themes.css'
 
@@ -17,14 +17,15 @@ import { darkTheme, lightTheme } from '../styles/themes.css'
 
 export const store = configureStore({
   reducer: {
+    [productsApi.reducerPath]: productsApi.reducer,
     theme: themeReducer,
     products: productReducer,
     auth: authReducer,
     users: userReducer,
     admin: adminReducer,
-    [productsApi.reducerPath]: productsApi.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(productsApi.middleware),
   devTools: true,
 })
 

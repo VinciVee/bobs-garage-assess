@@ -26,11 +26,11 @@ import App from './App.jsx';
 // Fetch from API
 // Check if in state first
 const state = store.getState()
-if (!state.products.productList.length || state.products.productList[0] != null) { store.dispatch(fetchAllProducts()) }
+// if (!state.products.productList.length || state.products.productList[0] != null) { store.dispatch(fetchAllProducts()) }
 
-if (!state.users.userList.length || state.users.userList[0] != null) { store.dispatch(fetchUserList()) }
+// if (!state.users.userList.length || state.users.userList[0] != null) { store.dispatch(fetchUserList()) }
 
-if(!state.admin.imageList.length || state.admin.imageList[0] != null) { store.dispatch(fetchImageList()) }
+// if(!state.admin.imageList.length || state.admin.imageList[0] != null) { store.dispatch(fetchImageList()) }
 
 // Check if user is logged-in
 const token = localStorage.getItem('token')

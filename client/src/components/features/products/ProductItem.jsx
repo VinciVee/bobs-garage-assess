@@ -43,7 +43,7 @@ const ProductItem = ({product, isAdmin, isAuth, handleDelete}) => {
     <Card className={`bg-dark text-light ${styles.cardContainer}`}>
       <Card.Img
         variant="top"
-        src={image}
+        src={image || null}
         className={styles.cardImage}
         alt={name} />
       <Card.ImgOverlay className={styles.overlay}>
