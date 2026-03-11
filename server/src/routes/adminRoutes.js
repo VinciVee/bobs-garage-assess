@@ -5,45 +5,27 @@
 // Built-in & external modules
 const express = require('express')
 const adminLog = require('debug')('app:admin') // replaces console.log
-const fs = require('fs')
-const multer = require('multer')
+const createUploader = require('../middleware/uploader')
 // Utilities
 const ApiError = require('../utilities/ApiError')
 
 // Router setup
 const router = express.Router()
-
-// Storage setup
-const storage = multer.diskStorage({
-  destination: function (req,file,cb) {
-    cb(null, './uploads')
-  },
-  filename: function(req,file,cb) {
-    cb(null, file.filename = file.originalname)
-  },
-})
-
-// Upload setup
-const upload = multer({ storage: storage })
+const uploadImage = createUploader()
 
 module.exports = () => {
   // UPLOAD IMAGE
   // POST /api/admin/uploadImage
-  router.post('/uploadImage', upload.single('file'),
+  router.post('/uploadImage', uploadImage,
   (req,res,next) => {
     try {
       adminLog(`[${req.method}] ${req.url}`)
 
-      if (!req.file) return next(ApiError.badRequest('No file uploaded'))
-
-      const BASE = process.env.BASE_URL
-      const fullpath = `${BASE.replace(/\/$/, "")}/${req.file.path.replace(/^\//, "")}`;
-      adminLog(`fullpath: ${fullpath}`)
       // Return info about the uploaded file
       res.json({
         message: 'File uploaded successfully',
         filename: req.file.filename,
-        path: fullpath,
+        path: req.fileUrl,
       })
     } catch (error) {
       return next(ApiError.internal('Image could not be uploaded ...', error))

@@ -76,10 +76,7 @@ const updateServiceSchema = Joi.object({
   desc: Joi.string().min(3).trim().optional().messages({
     "string.min": "Description must be at least 10 characters",
   }),
-  image: Joi.string().min(10).max(100).trim().optional().messages({
-    "string.empty": "Image URL (provided or placeholder) is missing",
-    "string.max": "Image URL exceeds number of characters",
-  }),
+  image: Joi.any(),
   price: Joi.number().positive().precision(2).optional().messages({
     "number.base": "Price must be a number",
     "number.positive": "Price must be a positive number",
@@ -108,7 +105,7 @@ const addUserSchema = Joi.object({
     "string.empty": "Email is required",
     "string.email": "Please provide a valid email address",
   }),
-  image: Joi.string().min(10).max(100).trim().lowercase().required().messages({
+  image: Joi.string().min(10).max(100).trim().lowercase().messages({
     "string.empty": "Image URL (provided or placeholder) is missing",
     "string.max": "Image URL exceeds number of characters",
   }),
@@ -139,7 +136,7 @@ const updateUserSchema = Joi.object({
     "string.empty": "Email is required",
     "string.email": "Please provide a valid email address",
   }),
-  image: Joi.string().min(10).max(100).trim().lowercase().required().messages({
+  image: Joi.string().min(10).max(100).trim().lowercase().messages({
     "string.empty": "Image URL (provided or placeholder) is missing",
     "string.max": "Image URL exceeds number of characters",
   }),

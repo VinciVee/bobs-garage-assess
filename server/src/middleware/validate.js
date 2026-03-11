@@ -23,6 +23,7 @@ const validate = (schema) => {
     const { error, value } = schema.validate(sanitizedData, options);
 
     if (error) {
+      console.log('Error occured', error)
       const errors = error.details.map((detail) => ({
         field: detail.path.join("."),
         message: detail.message,

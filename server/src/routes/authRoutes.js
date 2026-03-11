@@ -3,100 +3,39 @@
  *
  *
  * */
-// Built-in & external modules
+// Router setup
 const express = require('express')
-const authLog = require('debug')('app:authRoutes')
-// Database models
-const db = require('../models')
-const { User, Profile } = db.sequelize.models
+const router = express.Router()
 // Middleware
 const auth = require('../middleware/auth')
 const validate = require('../middleware/validate')
 const { registerSchema, loginSchema } = require('../utilities/schemas')
-// Utilities
-const ApiError = require('../utilities/ApiError')
-const { findUser, hashPassword, jwtSignUser, comparePassword } = require('../utilities/authServices')
-// Router setup
-const router = express.Router()
+
+const AuthController = require('../controllers/authController')
 
 
 module.exports = () => {
   // REGISTER
   // POST /api/auth/register
-  router.post('/register', validate(registerSchema),
-    async (req,res,next) => {
-    try {
-      authLog(`[${req.method}] ${req.url}`)
-      const { firstName, lastName, email, image, password } = req.body
-      // find user by email
-      const user = await findUser(email)
-
-      if(user !== null) return next(ApiError.badRequest('This email already exists'))
-
-      const newUser = {
-        firstName, lastName, email, image, password
-      }
-      newUser.password = await hashPassword(password)
-      // Add new user
-      const userRes = await User.create(newUser)
-
-      if (userRes === null) return next(ApiError.badRequest('An error occured while registering this user.'))
-      // Login new user
-      res.send({ token: jwtSignUser(userRes.toJSON()) })
-    } catch(error) {
-      return next(ApiError.internal('Your profile could not be registered at this time ...', error))
-  }})
-
+  router.post('/register',
+    [validate(registerSchema)],
+    AuthController.register
+  )
 
   // LOGIN
   // POST /api/auth/log
-  router.post('/login', validate(loginSchema),
-    async (req,res,next) => {
-    try {
-      authLog(`[${req.method}] ${req.url}`)
-      const { email, password } = req.body
-
-      // Find user
-      let user = await findUser(email)
-      if(!user) return next(ApiError.badRequest('Incorrect email or password'))
-
-      const isMatch = await comparePassword(user.password, password)
-
-      if(!isMatch) return next(ApiError.badRequest('Incorrect email or password'))
-
-      res.send({
-        token: jwtSignUser(user),
-      })
-
-    } catch (error) {
-      return next(ApiError.internal('Your profile could not be logged in at this time ...', error))
-    }
-  })
-
+  router.post('/login',
+    [validate(loginSchema)],
+    AuthController.login
+  )
 
   // GET LOGGED IN USER
   // GET /api/auth/
   // Token is passed through the headers and is checked by 'auth'
-  router.get('/', auth, async(req,res,next) => {
-    authLog(`[${req.method}] ${req.url}, user id:${req.user.id}`)
-    const options = {
-      attributes: {
-        exclude: ['password']
-      },
-      include: Profile,
-    }
-
-    try {
-      if(req.user.id === null) return next(ApiError.badRequest('No token provided'))
-      // Find logged-in user and return details w/out password
-      const user = await User.findByPk(req.user.id, options)
-
-      authLog('[loaduser] Returning found user...')
-      res.json(user)
-
-    } catch (error) {
-      return next(ApiError.internal('Unable to retrieve user data', error))
-  }})
+  router.get('/',
+    [auth],
+    AuthController.getLoggedUser
+  )
 
   return router
 }
